@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SmoothMouseLook : MonoBehaviour {
+public class AI_Rifle_Enemy : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
