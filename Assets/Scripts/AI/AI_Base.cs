@@ -11,21 +11,28 @@ using UnityEngine.AI;
 
 namespace SB {
 
-	[RequireComponent(typeof(NavMeshAgent))]
+	[RequireComponent(typeof(NavMeshAgent),typeof(UnitProperty))]
 	public class AI_Base : PooledObject {
 
+		[System.NonSerialized]
+		public UnitProperty property;
 		// Use this for initialization
-		NavMeshAgent agent;
+		protected NavMeshAgent agent;
 		private Animator animator;
 		Vector3 moveDirection = Vector3.zero;
 
-
-
 		void Start () {
+			InitComponet();
+		}
+		protected void InitComponet() {
+			property = GetComponent<UnitProperty>();
 			animator = GetComponent<Animator>();
 			agent = GetComponent<NavMeshAgent>();
 		}
-		
+
+		protected bool IsStoped {
+			get { return agent.isStopped || !agent.hasPath;}
+		}
 		// Update is called once per frame
 		void Update () {
 			

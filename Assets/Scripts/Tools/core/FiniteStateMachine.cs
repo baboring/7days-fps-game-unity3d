@@ -4,7 +4,6 @@
 	author:		Benjamin
 	purpose:	[FSM]
 *********************************************************************/
-
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -99,7 +98,7 @@ namespace SB
 			Callback _callback_excute,
 			Callback _callback_exit = null,
 			Callback _callback_enter = null,
-			IEnumerable _instruction = null)
+			IEnumerable _routine = null)
 		{
 			StateTransition<T> tr = new StateTransition<T>(init, end);
 
@@ -111,7 +110,7 @@ namespace SB
 			mTransEnter.Add(tr, _callback_enter);
 			mTransExcute.Add(tr, _callback_excute);
 			mTransExit.Add(tr, _callback_exit);
-			mTransEnumerator.Add(tr, _instruction);
+			mTransEnumerator.Add(tr, _routine);
 
 			//Debug.Log("[FSM] Added transition " + mTransExcute.Count + ": " + tr.GetInitState() + " - " + tr.GetEndState() + ", Callback: " + _callback_excute);
 		}
@@ -181,13 +180,10 @@ namespace SB
 		}
 		
 		// command  
-		public IEnumerator Instruction
+		public IEnumerator routine
 		{
 			get { return currTransEnumerator.GetEnumerator(); }
 		}
-
-
-
 
 		// Call this to prevent the state machine from leaving this state
 		public void Lock() { mbLocked = true; }
@@ -211,57 +207,47 @@ namespace SB
 
 namespace Ai
 {
-	public interface IState
-	{
+	public interface IState {
 		void Enter(Entity e);
 		void Execute(Entity e);
 		void Exit(Entity e);
 	}
 
 	// 기본적인 상태 전이 테이블
-	abstract public class StateTransitionTable
-	{
+	abstract public class StateTransitionTable {
 		protected Dictionary<object, IState> table = new Dictionary<object, IState>();
 
-		public void SetState(object evt, IState state)
-		{
+		public void SetState(object evt, IState state) {
 			table.Add(evt, state);
 		}
 
-		public IState GetState(object evt)
-		{
+		public IState GetState(object evt) {
 			Ai.IState i = null;
-
 			try {
 				i = table[evt];
-
 			}
 			catch (KeyNotFoundException) {
 				return null;
 			}
-
 			return i;
 		}
 	}
 
 	// 기본적인 상태 이벤트
-	abstract public class Entity
-	{
+	abstract public class Entity {
 		protected Ai.StateTransitionTable transitionTable = null;
 		protected IState currentState = null;
 
-		public void UpdateState()
-		{
+		public void UpdateState() {
 			if (currentState != null)
 				currentState.Execute(this);
 			else
 				System.Diagnostics.Trace.WriteLine("zero state");
 		}
 
-		public object Event
-		{
-			set
-			{
+		public object Event {
+			set {
+				Debug.Log("FSM Event:"+value.ToString());
 				if (value == null) {
 					currentState.Exit(this);
 					currentState = null;
@@ -269,7 +255,6 @@ namespace Ai
 				}
 
 				IState i = transitionTable.GetState(value);
-
 				if (i != null) {
 					if (currentState != null)
 						currentState.Exit(this);

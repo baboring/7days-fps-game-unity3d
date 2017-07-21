@@ -24,7 +24,7 @@ namespace SB {
 			if(Input.GetKeyDown(KeyCode.Tab)) {
 				Vector3 point;
 				if (Facade_NavMesh.RandomPoint(spots[Random.Range(0, spots.Length)].position, 10f, out point)) {
-					SpawnObject(objPrefab[0],point);
+					SpawnObject(objPrefab[Random.Range(0, objPrefab.Length)],point);
 				}
 			}
 		}
@@ -35,9 +35,8 @@ namespace SB {
 			AI_Base spawn = prefab.Instanciate<AI_Base>();
 			spawn.transform.position = pos;
 
-			var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			go.transform.position = pos;
-			Debug.Log("Spawn",go);
+			// var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			// go.transform.position = pos;
 		}
 	}
 }
