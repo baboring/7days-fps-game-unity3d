@@ -1,6 +1,6 @@
 ﻿/* *************************************************
 *  Created:  7/20/2017, 2:04:16 PM
-*  File:     AI_Base.cs
+*  File:     Unit.cs
 *  Author:   Benjamin
 *  Purpose:  []
 ****************************************************/
@@ -12,7 +12,7 @@ using UnityEngine.AI;
 namespace SB {
 
 	[RequireComponent(typeof(NavMeshAgent),typeof(UnitProperty))]
-	public class AI_Base : PooledObject {
+	public class Unit : PooledObject {
 
 		[System.NonSerialized]
 		public UnitProperty property;
@@ -43,6 +43,9 @@ namespace SB {
 		
 		}
 		
+		void OnTriggerEnter(Collider col){
+			Debug.Log("hit+:" + gameObject.name);
+		}
 		void OnLevelWasLoaded () {
 			ReturnToPool();
 		}	

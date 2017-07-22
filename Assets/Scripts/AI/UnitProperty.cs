@@ -16,7 +16,7 @@ namespace SB {
 	};
 	public class UnitProperty : MonoBehaviour {
 
-		public AliasType type;
+		public AliasType ally;
 		public float sightRange = 15;		// range of detect target 
 		public float stepAngle = 5;
 		public float moveSpeed = 5;

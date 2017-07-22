@@ -13,7 +13,7 @@ namespace SB {
 	public class SpawnManager : MonoBehaviour {
 
 		public Transform[] spots;
-		public AI_Base[] objPrefab;
+		public Unit[] objPrefab;
 		// Use this for initialization
 		void Start () {
 			
@@ -29,10 +29,10 @@ namespace SB {
 			}
 		}
 
-		void SpawnObject(AI_Base prefab, Vector3 pos) {
+		void SpawnObject(Unit prefab, Vector3 pos) {
 			Debug.DrawRay(pos, Vector3.up, Color.blue, 5.0f);
 
-			AI_Base spawn = prefab.Instanciate<AI_Base>();
+			Unit spawn = prefab.Instanciate<Unit>();
 			spawn.transform.position = pos;
 
 			// var go = GameObject.CreatePrimitive(PrimitiveType.Cube);

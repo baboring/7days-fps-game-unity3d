@@ -11,7 +11,7 @@ using UnityEngine;
 using Ai;
 using SB;
 
-public class AI_Rifle_Enemy : AI_Base {
+public class AI_Rifle_Enemy : Unit {
 	AIEntity _aiEntity;
 
 	// definition state
@@ -111,7 +111,7 @@ public class AI_Rifle_Enemy : AI_Base {
 
 	// Use this for initialization
 	void Start () {
-		AI_Base:InitComponet(); 
+		Unit:InitComponet(); 
 	}
 	
 	// Update is called once per frame

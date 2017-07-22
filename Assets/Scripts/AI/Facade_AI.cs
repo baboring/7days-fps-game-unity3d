@@ -38,7 +38,7 @@ namespace SB {
                     if(debug_on)
                         Debug.DrawRay(pos, direction * hit.distance, Color.green);
                     var unit_info = hit.collider.GetComponent<UnitProperty>();
-                    if (unit_info && unit_info.type != owner.type) {
+                    if (unit_info && unit_info.ally != owner.ally) {
                         //Enemy was seen
                         Debug.Log("Find taret:" + unit_info.gameObject.name);
                         target = unit_info;
