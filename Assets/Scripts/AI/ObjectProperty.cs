@@ -39,21 +39,25 @@ namespace SB {
 		public float stepAngle  { get; private set;}
 
 		public float eyeLevel  { get; private set;}
-		public float wander_range  { get; private set;}
+		public float wander_min_range  { get; private set;}
+		public float wander_max_range  { get; private set;}
 
 
 		// basic ability ( constant )
 		public float walkSpeed  { get; private set;}
 		public float runSpeed { get; private set;}
 		public float acceleration { get; private set;}
-		public float angular_speed { get; private set;}
+		public float angularSpeed { get; private set;}
 		public float attack_power { get; private set;}
+		public float stoppingDist { get; private set;}
 
 		// dynmic data
 		public float life = 10;
 
 
 		void Awake() {
+			if(null == R.instance)
+				R.Create();
 			// attach default owner
 			owner = this.GetComponent<Unit>();
 			Reset();
@@ -66,11 +70,13 @@ namespace SB {
 			attack_power = info.attack_power;
 			sightRange = info.sightRange;
 			eyeLevel = info.eyeLevel;
-			wander_range = info.wander_range;
+			wander_min_range = info.wander_min_range;
+			wander_max_range = info.wander_max_range;
 			walkSpeed = info.walkSpeed;
 			runSpeed = info.runSpeed;
 			acceleration = info.acceleration;
-			angular_speed = info.angular_speed;
+			angularSpeed = info.angularSpeed;
+			stoppingDist = info.stoppingDist;
 
 			life = info.life;
 			

@@ -20,9 +20,9 @@ namespace SB {
 	}
 	public static class Facade_NavMesh {
 
-		public static bool RandomPoint(Vector3 center, float range, out Vector3 result) {
+		public static bool RandomRangePoint(Vector3 center, float minRange, float maxRange, out Vector3 result) {
 			for (int i = 0; i < 30; i++) {
-				Vector3 randomPoint = center + Random.insideUnitSphere * range;
+				Vector3 randomPoint = center + Random.insideUnitSphere * Random.Range(minRange,maxRange);
 				NavMeshHit hit;
 				if (NavMesh.SamplePosition(randomPoint, out hit, 1.0f, NavMesh.AllAreas)) {
 					result = hit.position;

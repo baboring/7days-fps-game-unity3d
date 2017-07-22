@@ -45,6 +45,7 @@ namespace SB {
 
 		class WanderState : IState {
 
+			Vector3 dest = Vector3.zero;
 			public void Enter(Entity e) {
 				AIEntity data = (AIEntity)e;
 				data.target = null;
@@ -57,12 +58,18 @@ namespace SB {
 						data.Event = eState.Chase;
 					}
 					else if(data.owner.IsStoped) {
-						Vector3 dest;
-						if(Facade_NavMesh.RandomPoint(data.owner.transform.position,data.owner.property.wander_range,out dest)) {
+
+						if(Facade_NavMesh.RandomRangePoint(
+							data.owner.transform.position, 
+							data.owner.property.wander_min_range,
+							data.owner.property.wander_max_range, out dest)) {
 							data.owner.agent.destination = dest;
 						}
 					}
 				}
+
+				Debug.DrawRay(data.owner.transform.position, dest - data.owner.transform.position, Color.green);
+
 			}
 		}
 		class StateSearch : IState {
@@ -132,7 +139,6 @@ namespace SB {
 
 		override public void OnDamage(ObjectProperty uInfo) {
 			base.OnDamage(uInfo);
-			agent.velocity = Vector3.zero;
 		}		
 		
 	}

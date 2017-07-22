@@ -32,6 +32,11 @@ namespace SB {
 			animator.ResetParameters();
 			animator.SetTrigger("Reset");
 
+			// default speed
+			agent.speed = property.walkSpeed;
+			agent.angularSpeed = property.angularSpeed;
+			agent.stoppingDistance = property.stoppingDist;
+			
 			Debug.Log("Enabled 0/"+ this.GetType().Name);
 							
 		}
@@ -68,6 +73,7 @@ namespace SB {
 					agent.Resume();
 					break;
 				case "enterDie":
+					agent.Stop();
 					break;
 				case "leaveDie":
 					this.property.ReturnToPool();
@@ -96,14 +102,11 @@ namespace SB {
 
 			agent.velocity = (agent.velocity.magnitude / 2f) * agent.velocity.normalized;
 			property.life -= uInfo.attack_power;
-			if(property.life <= 0) {
-				agent.Stop();
-				Debug.Log("Die !!!");
-				SetAnimationTrigger("dying");
-			}
-			else {
+
+			if(IsAlive)
 				SetAnimationTrigger("damaged");
-			}
+			else
+				SetAnimationTrigger("dying");
 		}
 		
 	}

@@ -43,13 +43,15 @@ namespace SB {
 								sightRange = rec.tContents[1],
 								stepAngle = rec.tContents[2],
 								eyeLevel = rec.tContents[3],
-								wander_range = rec.tContents[4],
-								angular_speed = rec.tContents[5],
-								walkSpeed = rec.tContents[6],
-								runSpeed = rec.tContents[7],
-								acceleration = rec.tContents[8],
-								attack_power = rec.tContents[9],
-								life = rec.tContents[10],
+								wander_min_range = rec.tContents[4],
+								wander_max_range = rec.tContents[5],
+								angularSpeed = rec.tContents[6],
+								walkSpeed = rec.tContents[7],
+								runSpeed = rec.tContents[8],
+								stoppingDist = rec.tContents[9],
+								acceleration = rec.tContents[10],
+								attack_power = rec.tContents[11],
+								life = rec.tContents[12],
 							};
 							dic.Add(newOne.id, newOne);
 						}
@@ -217,10 +219,12 @@ namespace SB {
 			public float sightRange;
 			public float stepAngle;
 			public float eyeLevel;
-			public float wander_range;
-			public float angular_speed;
+			public float wander_min_range;
+			public float wander_max_range;
+			public float angularSpeed;
 			public float walkSpeed;
 			public float runSpeed;
+			public float stoppingDist;
 			public float acceleration;
 			public float attack_power;
 			public float life;
