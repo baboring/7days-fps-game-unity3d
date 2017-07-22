@@ -46,4 +46,14 @@ public static class Facade_Coroutine  {
          action();
          yield return 0;
      }
+
+    public static void Wait(MonoBehaviour go, System.Func<bool> condition) {
+		 go.StartCoroutine(Wait(condition));
+     }	 
+    public static IEnumerator Wait(System.Func<bool> condition) {
+        if (condition == null)
+            yield break;
+        while (condition())
+            yield return null;
+    }
 }

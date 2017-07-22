@@ -9,6 +9,9 @@ public class PickPlanePoint : MonoBehaviour {
     public Transform markerObject;
     void Update() {
         if (Input.GetMouseButtonDown(0)) {
+            Debug.Assert(null != Camera.main,"Camera.main is null");
+            if(!Camera.main)
+                return;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (groundPlane.Raycast(ray, out hit, 100))

@@ -7,13 +7,12 @@ namespace SB {
 
 	[RequireComponent(typeof(CharacterController),typeof(UnitProperty))]
 	[RequireComponent(typeof(Animator))]
-	public class PlayerController : MonoBehaviour {
+	public class PlayerController : PooledObject {
 
 		public Bullet bullet;
 		public GameObject bulletSpawn;
 		// Use this for initialization
-		public Transform lookTransform;
-		public float speed = 1f;
+		public Transform eyesTransform;
 		public float jumpSpeed = 5.0f;
 		public float gravity = 10;
 
@@ -28,13 +27,11 @@ namespace SB {
 			unitInfo = GetComponent<UnitProperty>();
 			animator = GetComponent<Animator>();
 			controller = GetComponent<CharacterController>();
-			if(lookTransform) {
-				Camera playerCam = lookTransform.GetComponent<Camera>();
-				if(playerCam) {
-					Debug.Log("switch camera");
-					Camera.main.enabled = false;
-					playerCam.enabled = true;
-				}
+		}
+
+		public void ConnectToEyes(Transform cam) {
+			if(cam) {
+				eyesTransform = cam;
 			}
 		}
 		
@@ -50,19 +47,19 @@ namespace SB {
 		bool isJump = false;
 		void InputMovement() {
 			// look cam view
-			if(lookTransform) {
-				moveDirection = lookTransform.forward * Input.GetAxis("Vertical");
-	//			moveDirection +=  Vector3.Cross(lookTransform.up, lookTransform.forward).normalized * Input.GetAxis("Horizontal");
-				moveDirection +=  lookTransform.right * Input.GetAxis("Horizontal");
-				animator.SetFloat("horz",Input.GetAxis("Horizontal") * speed);
-				animator.SetFloat("vert",Input.GetAxis("Vertical") * speed);
+			if(eyesTransform) {
+				moveDirection = eyesTransform.forward * Input.GetAxis("Vertical");
+	//			moveDirection +=  Vector3.Cross(eyesTransform.up, eyesTransform.forward).normalized * Input.GetAxis("Horizontal");
+				moveDirection +=  eyesTransform.right * Input.GetAxis("Horizontal");
+				animator.SetFloat("horz",Input.GetAxis("Horizontal") * unitInfo.walkSpeed);
+				animator.SetFloat("vert",Input.GetAxis("Vertical") * unitInfo.walkSpeed);
 			}
 			else {
 				// look back view
 				moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 				moveDirection = transform.TransformDirection(moveDirection);
-				animator.SetFloat("horz",moveDirection.x * speed);
-				animator.SetFloat("vert",moveDirection.z * speed);
+				animator.SetFloat("horz",moveDirection.x * unitInfo.walkSpeed);
+				animator.SetFloat("vert",moveDirection.z * unitInfo.walkSpeed);
 			}
 
 			if (controller.isGrounded && Input.GetButton("Jump")) {
@@ -81,9 +78,16 @@ namespace SB {
 				LayerId.NonPlayer,
 				LayerId.Geometry,
 				LayerId.Obstacle); 
-			// Vector3 fwd = transform.TransformDirection(Vector3.forward);
-			Debug.Assert(null != lookTransform,"look object is null");
-			Vector3 lookDir = lookTransform.forward;
+			// current look direction default
+			Vector3 lookDir = transform.TransformDirection(Vector3.forward);
+
+			// Camera direction default
+			if(eyesTransform) {
+				Debug.Assert(null != eyesTransform,"look object is null");
+				lookDir = eyesTransform.forward;
+			}
+
+			//	Adjust aim more precisly 
 			// RaycastHit hit;
 			// if(Physics.Raycast(transform.position, lookDir, out hit, 1000 ,maskLayer)) {
 			// 	Vector3 target = transform.position + (lookDir * hit.distance);
@@ -105,8 +109,8 @@ namespace SB {
 			Physics.SphereCast(transform.position, controller.radius, Vector3.down, out hitInfo,
 								controller.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
 			Vector3 move = Vector3.ProjectOnPlane(moveDirection, hitInfo.normal).normalized;
-			moveDirection.x = move.x*speed;
-			moveDirection.z = move.z*speed;
+			moveDirection.x = move.x * unitInfo.walkSpeed;
+			moveDirection.z = move.z * unitInfo.walkSpeed;
 			
 			if (controller.isGrounded) {
 

@@ -158,52 +158,16 @@ public abstract class ManualSingletonMB<T> : UnityEngine.MonoBehaviour where T :
 
 	protected Action DestroyEventHandler;
 
+	protected virtual void Awake()	{
+		Debug.Log("Awake Manual singleton : " + typeof(T));
+	}
 	void OnDestroy()
 	{
-		// @bluegol 201405
-		// 테스트 등을 위해, 게임 상에 2개가 생길 수도 있는데 이런 경우, Awake에서 바로 disable시킨다.
-		// 따라서 이 체크가 필요함
 		if (_instance != this)
 			return;
 
 		if (DestroyEventHandler != null)
 			DestroyEventHandler();
 		_instance = null;
-		//Debug.Log("인스턴스 파괴 {0}", typeof(T));
 	}
 }
-
-/*
-/// @bluegol C#은 제네릭 파라메터에서 상속받는 걸 허용하지 않으므로, 이 부분의 코드 카피는 어쩔 수 없다.
-public abstract class ManualSingletonUMB<T> : uLink.MonoBehaviour where T : ManualSingletonUMB<T>
-{
-	static private T _instance;
-	static public T Instance
-	{
-		get { return _instance; }
-		set
-		{
-			if (_instance != null)
-				throw new System.ApplicationException("cannot set Instance twice!");
-
-			_instance = value;
-		}
-	}
-
-	protected Action DestroyEventHandler;
-
-	void OnDestroy()
-	{
-		// @bluegol 201405
-		// 테스트 등을 위해, 게임 상에 2개가 생길 수도 있는데 이런 경우, Awake에서 바로 disable시킨다.
-		// 따라서 이 체크가 필요함
-		if (_instance != this)
-			return;
-
-		if (DestroyEventHandler != null)
-			DestroyEventHandler();
-		_instance = null;
-		//Logger.Dev.InfoFormat2("인스턴스 파괴 {0}", typeof(T));
-	}
-}
-*/

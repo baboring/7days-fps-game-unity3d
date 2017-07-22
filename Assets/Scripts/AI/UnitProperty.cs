@@ -16,13 +16,22 @@ namespace SB {
 	};
 	public class UnitProperty : MonoBehaviour {
 
+		// types
 		public AliasType ally;
+
+		// maguring values
 		public float sightRange = 15;		// range of detect target 
 		public float stepAngle = 5;
-		public float moveSpeed = 5;
-		public float runSpeed = 5;
+
 		public float eyeLevel = 1.5f;
 		public float wander_range = 3f;
+
+
+		// basic ability 
+		public float walkSpeed = 1;		// walk speed
+		public float runSpeed = 2;
+		public float acceleration = 2;
+		public float angular_speed = 120;
 
 	}
 }

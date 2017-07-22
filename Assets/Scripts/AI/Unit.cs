@@ -31,14 +31,14 @@ namespace SB {
 		}
 
 		protected bool IsStoped {
-			get { return agent.isStopped || !agent.hasPath;}
+			get { return agent && (agent.isStopped || !agent.hasPath);}
 		}
 		// Update is called once per frame
 		void Update () {
 			
 		}
 		void FixedUpdate () {
-			if(animator)
+			if(animator && agent)
 				animator.SetFloat("forward",agent.velocity.magnitude);
 		
 		}

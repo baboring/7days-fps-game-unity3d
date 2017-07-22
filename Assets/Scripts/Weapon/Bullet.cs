@@ -46,6 +46,9 @@ namespace SB {
 			this.force = force;
 			this.direction = dir;
 			isHit = false;
+			AudioSource source = GetComponent<AudioSource>(); 
+			if(source)
+				source.Play();
 		}
 
 		void OnTriggerEnter(Collider col)

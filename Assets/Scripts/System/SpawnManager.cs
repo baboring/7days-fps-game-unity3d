@@ -10,13 +10,43 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace SB {
-	public class SpawnManager : MonoBehaviour {
+
+	public enum eSpawn {
+		Player = 0,
+		NonPlayer,
+		Item,
+	}
+	public class SpawnManager : ManualSingletonMB<SpawnManager> {
 
 		public Transform[] spots;
-		public Unit[] objPrefab;
+		public PooledObject[] objPrefabNPC;
+		public PooledObject[] objPrefabPlayer;
 		// Use this for initialization
-		void Start () {
-			
+		void Awake() {
+			instance = this;
+		}
+		void Start() {
+			Debug.Log("SpawnManager initialized");
+		}
+		public PooledObject RandomSpawn(eSpawn type) {
+			Vector3 point;
+			PooledObject[] objPrefab = null;
+			Transform[] posPrefab = null;
+			switch(type) {
+				case eSpawn.Player:
+					objPrefab = objPrefabPlayer;
+					posPrefab = spots;
+					break;
+				case eSpawn.NonPlayer:
+					objPrefab = objPrefabNPC;
+					posPrefab = spots;
+					break;
+			}
+
+			if (objPrefab != null && posPrefab != null && Facade_NavMesh.RandomPoint(posPrefab[Random.Range(0, posPrefab.Length)].position, 10f, out point)) {
+				return SpawnObject(objPrefab[Random.Range(0, objPrefab.Length)],point);
+			}
+			return default(PooledObject);
 		}
 		
 		// Update is called once per frame
@@ -24,19 +54,21 @@ namespace SB {
 			if(Input.GetKeyDown(KeyCode.Tab)) {
 				Vector3 point;
 				if (Facade_NavMesh.RandomPoint(spots[Random.Range(0, spots.Length)].position, 10f, out point)) {
-					SpawnObject(objPrefab[Random.Range(0, objPrefab.Length)],point);
+					SpawnObject(objPrefabNPC[Random.Range(0, objPrefabNPC.Length)],point);
 				}
 			}
 		}
 
-		void SpawnObject(Unit prefab, Vector3 pos) {
+		PooledObject SpawnObject(PooledObject prefab, Vector3 pos) {
 			Debug.DrawRay(pos, Vector3.up, Color.blue, 5.0f);
 
-			Unit spawn = prefab.Instanciate<Unit>();
+			PooledObject spawn = prefab.Instanciate<PooledObject>();
 			spawn.transform.position = pos;
+			spawn.transform.gameObject.SetActive(true);
 
 			// var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
 			// go.transform.position = pos;
+			return spawn;
 		}
 	}
 }

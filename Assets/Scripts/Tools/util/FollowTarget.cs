@@ -1,3 +1,9 @@
+/* *************************************************
+*  Created:  7/22/2017, 12:40:58 AM
+*  File:     FollowTarget.cs
+*  Author:   Benjamin
+*  Purpose:  []
+****************************************************/
 using System;
 using UnityEngine;
 
@@ -8,8 +14,7 @@ public class FollowTarget : MonoBehaviour
 	public Vector3 offset = new Vector3(0f, 7.5f, 0f);
 
 
-	private void LateUpdate()
-	{
+	private void LateUpdate() {
 		transform.position = target.position + offset;
 	}
 }
