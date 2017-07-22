@@ -12,7 +12,7 @@ namespace SB {
 		Vector3 direction;
 		bool isHit = false;
 
-		UnitProperty owner;
+		ObjectProperty owner;
 		void Awake() {
 
 		}
@@ -41,38 +41,41 @@ namespace SB {
 		}
 
 		// Fire
-		public void OnFire(UnitProperty owner, Vector3 dir, float force ) {
+		public bool OnFire(ObjectProperty owner, Vector3 dir, float force ) {
 			this.owner = owner;
 			this.force = force;
 			this.direction = dir;
 			isHit = false;
-			AudioSource source = GetComponent<AudioSource>(); 
-			if(source)
-				source.Play();
+
+			return true;
 		}
 
 		void OnTriggerEnter(Collider col)
 		{
-			UnitProperty hitUnit = col.gameObject.GetComponent<UnitProperty>();
+			ObjectProperty hitUnit = col.gameObject.GetComponent<ObjectProperty>();
 			
 			Debug.Assert(null != this.owner,"Bullet's Owner is null");
-			Debug.Log("hit-:" + col.gameObject.name);
 			isHit = true;
-			
-			Facade_Coroutine.DelaySeconds(this,()=>{
-				this.ReturnToPool();
-			},3);			
+	
 			
 			//all projectile colliding game objects should be tagged "Enemy" or whatever in inspector but that tag must be reflected in the below if conditional
 			if (null != hitUnit && hitUnit.ally != this.owner.ally )
 			{
+				//Debug.Log("hit-:" + col.gameObject.name);
 				// Destroy(col.gameObject);
 				// //add an explosion or something
 				// //destroy the projectile that just caused the trigger collision
 				// Destroy(gameObject);
-				PooledObject obj =  hitUnit.gameObject.GetComponent<PooledObject>();
-				if(obj)
-					obj.ReturnToPool();
+				Unit obj =  hitUnit.gameObject.GetComponent<Unit>();
+				if(obj && obj.IsAlive) {
+					obj.OnDamage(owner);
+				}
+				this.ReturnToPool();
+			}
+			else {
+				Facade_Coroutine.DelaySeconds(this,()=>{
+					this.ReturnToPool();
+				},3);	
 			}
 		}
 	}

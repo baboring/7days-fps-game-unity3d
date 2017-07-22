@@ -116,7 +116,7 @@ namespace SB {
 			return null;
 		}
 	}
-	public static class StringLoggingExtensions
+	public static class StringExtensionMethods
 	{
 		/// Sets the color of the text according to the parameter value.
 		public static string ColorFormat(this string message,Colors color,string format,params object[] args)
@@ -182,7 +182,7 @@ namespace SB {
 		white,
 		yellow
 	}
-	public static class ExtensionMethods
+	public static class LogExtensionMethods
 	{
 		static public void LogFormatColor(this Debug target, ColorType color,string format, params object[] args)
 		{

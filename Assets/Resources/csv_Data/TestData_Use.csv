@@ -1,0 +1,7 @@
+MessageBox,4,4
+ClassName,Type,Value,StrValue
+!string,DefaultValue.eKey,!int,!string
+Benjamin,DEFAULT_HELPER_COOLTIME,90,
+Amy,MAX_ITEM_GRADE,7,
+Aden,MAX_TOTAL_GIFT,10,
+Mac,MAX_MILEAGE_DIA,200,

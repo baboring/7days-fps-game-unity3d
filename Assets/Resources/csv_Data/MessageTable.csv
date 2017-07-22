@@ -1,0 +1,43 @@
+SystemMsg,2,9
+id,StrValue
+!enum:eKey,!string
+Yes,Yes
+No,No
+Confirmation,Ok
+TitleNotice,Notice
+TitleWarning,Warning !!
+MsgNotRegisterPopup,팝업으로 등록된 윈도우가 아닙니다
+CantUseDuplicatingPopup,팝업 윈도우는 중복해서 사용 할 수 없습니다.
+FoundIllegalApp,불법 앱 발견 앱 강제종료
+FoundIllegalSignature,불법 APK 검출
+Speeches,6,10
+id,StrValue,Search,StrHelp,StrMotion,json
+!enum:eKey,!string,!string,!string,!string,!string
+Welcome,Welcom {0},,,shaking_hands_2,{ }
+Greeting,Hello {0} how are you?,,"Head" "Stomach" "Thigh",shaking_hands_2,
+AskHelp,What can I do for you?,,,shaking_hands_2,
+AskHelp2,What can I help you?,,,shaking_hands_2,
+PainTrackerIntro,Touch the area and tell me.,,,shaking_hands_2,
+PainTrackerTouch,Touch the area that you have pain.,,,shaking_hands_2,
+PainTrackerHowPain,How sever is your pain from 1 to 10?,,,shaking_hands_2,
+AnythingElse,Ok  Logged anything else?,,,shaking_hands_2,
+WhichPart,Which part do you have pain?,,,shaking_hands_2,
+HowAreYou,How are you feeling today?,,,,
+Answer,5,3
+IDX,szSentence,szQType,szAType,szNext
+!int,!string,!string,!string,!string
+1,What can I do for you?,greet,greet,quit
+2,,,,
+3,,,,
+Seq,8,9
+state,speak,lookat,cases,condition,cond_set,elseCase,next
+!enum:eState,!string,!string,!string,!string,!string,!string,Seq.eState
+Sleep,Say again Please {0},stand,wait for knocking,none,,None,Sleep
+Greet,Hello {0}. | What's up? {0} | What's going on? {0},stand,none,none,,Next,AskDoForYou
+AskDoForYou,What can I do for you?,stand,answer command,wait_for,a cold | a headache | stomache ache | pain | emergency number,AskAgain,AskWhich
+AskWhich,Touch the area and then click ok.,none,a cold | a headache | stomache ache | pain,none,,Next,AskHowDensity
+AskHowDensity,How sever is your pain from 1 to 10?,none,answer number,wait_for,one | two |three | four | five | six | seven | eight | nine | ten,AskAgain,AskConfirm
+AskConfirm,Ok  Logged anything else?,stand,answer anything,depend_on,,Next,Finish
+Finish,Thank you.,stand,none,none,,,Sleep
+AskCallup,Do you want me to call up to emergency?,none,emergency number,wait_for,yes | no | sure | of course,Next,CallupEmergency
+CallupEmergency,Wait for calling.,none,call up to emegency,finish_call,,Next,AskConfirm

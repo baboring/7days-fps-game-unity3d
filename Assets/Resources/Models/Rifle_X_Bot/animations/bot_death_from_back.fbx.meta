@@ -189,7 +189,23 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 1
+        functionName: OnAnimationTrigger
+        data: leaveDie
+        objectReferenceParameter: {fileID: 1013593663853282, guid: 9e205785b39dd354894a8b0adb7e5ac6,
+          type: 2}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: OnAnimationTrigger
+        data: enterDie
+        objectReferenceParameter: {fileID: 1013593663853282, guid: 9e205785b39dd354894a8b0adb7e5ac6,
+          type: 2}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1

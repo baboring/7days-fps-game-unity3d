@@ -1,0 +1,33 @@
+PropertyInfo,11,5
+id,sightRange,stepAngle,eyeLevel,wander_range,angular_speed,walkSpeed,runSpeed,acceleration,attack_power,life
+!enum:eID,!float,!float,!float,!float,!float,!float,!float,!float,!float,!float
+None,,,,,,,,,,
+Bullet,,,,,,,,100,1,1
+Hunter,15,5,1.5,3,1200,1,2.5,2,1,10
+Bot_X,12,5,1.5,3,1200,1,2,2,1,10
+Player,12,5,1.5,3,1200,2,3,2,1,10
+Speeches,6,10
+id,StrValue,Search,StrHelp,StrMotion,json
+!enum:eKey,!string,!string,!string,!string,!string
+Welcome,Welcom {0},,,shaking_hands_2,{ }
+Greeting,Hello {0} how are you?,,"Head" "Stomach" "Thigh",shaking_hands_2,
+AskHelp,What can I do for you?,,,shaking_hands_2,
+AskHelp2,What can I help you?,,,shaking_hands_2,
+PainTrackerIntro,Touch the area and tell me.,,,shaking_hands_2,
+PainTrackerTouch,Touch the area that you have pain.,,,shaking_hands_2,
+PainTrackerHowPain,How sever is your pain from 1 to 10?,,,shaking_hands_2,
+AnythingElse,Ok  Logged anything else?,,,shaking_hands_2,
+WhichPart,Which part do you have pain?,,,shaking_hands_2,
+HowAreYou,How are you feeling today?,,,,
+Seq,8,9
+state,speak,lookat,cases,condition,cond_set,elseCase,next
+!enum:eState,!string,!string,!string,!string,!string,!string,Seq.eState
+Sleep,Say again Please {0},stand,wait for knocking,none,,None,Sleep
+Greet,Hello {0}. | What's up? {0} | What's going on? {0},stand,none,none,,Next,AskDoForYou
+AskDoForYou,What can I do for you?,stand,answer command,wait_for,a cold | a headache | stomache ache | pain | emergency number,AskAgain,AskWhich
+AskWhich,Touch the area and then click ok.,none,a cold | a headache | stomache ache | pain,none,,Next,AskHowDensity
+AskHowDensity,How sever is your pain from 1 to 10?,none,answer number,wait_for,one | two |three | four | five | six | seven | eight | nine | ten,AskAgain,AskConfirm
+AskConfirm,Ok  Logged anything else?,stand,answer anything,depend_on,,Next,Finish
+Finish,Thank you.,stand,none,none,,,Sleep
+AskCallup,Do you want me to call up to emergency?,none,emergency number,wait_for,yes | no | sure | of course,Next,CallupEmergency
+CallupEmergency,Wait for calling.,none,call up to emegency,finish_call,,Next,AskConfirm

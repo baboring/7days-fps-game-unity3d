@@ -26,6 +26,7 @@ namespace SB {
 			Debug.Log("----- StartGame --------");
 			GameObject[] playerCameras = GameObject.FindGameObjectsWithTag("Player Camera");
 			PlayerController player = SpawnManager.instance.RandomSpawn(eSpawn.Player) as PlayerController;
+			Debug.Assert(null != player,"Random Spawn fails : player is null");
 			foreach(var go in playerCameras) {
 				if(go.GetComponent<PlayerCamera>()) {
 					go.GetComponent<PlayerCamera>().AttachTo(player);

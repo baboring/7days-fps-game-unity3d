@@ -22,6 +22,10 @@ namespace SB {
 		}
 		
 		public void AttachTo(PlayerController player, Vector3 offset = default(Vector3)) {
+
+			Debug.Assert(null != player,"player controller is null");
+			if(!player)
+				return;
 			target = player.transform;
 			if(offset != default(Vector3))
 				this.offset = offset;

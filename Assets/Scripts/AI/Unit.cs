@@ -11,43 +11,31 @@ using UnityEngine.AI;
 
 namespace SB {
 
-	[RequireComponent(typeof(NavMeshAgent),typeof(UnitProperty))]
-	public class Unit : PooledObject {
+	[RequireComponent(typeof(ObjectProperty))]
+	public abstract class Unit : MonoBehaviour {
 
 		[System.NonSerialized]
-		public UnitProperty property;
+		public ObjectProperty property;
 		// Use this for initialization
-		protected NavMeshAgent agent;
-		private Animator animator;
-		Vector3 moveDirection = Vector3.zero;
 
-		void Start () {
-			InitComponet();
-		}
-		protected void InitComponet() {
-			property = GetComponent<UnitProperty>();
-			animator = GetComponent<Animator>();
-			agent = GetComponent<NavMeshAgent>();
+		protected void Awake () {
+			property = GetComponent<ObjectProperty>();
 		}
 
-		protected bool IsStoped {
-			get { return agent && (agent.isStopped || !agent.hasPath);}
+		protected void OnEnable() {
+			Debug.Assert(null != property,"Unit's propery is null");
+			property.Reset();
 		}
 		// Update is called once per frame
 		void Update () {
 			
 		}
-		void FixedUpdate () {
-			if(animator && agent)
-				animator.SetFloat("forward",agent.velocity.magnitude);
 		
-		}
-		
-		void OnTriggerEnter(Collider col){
-			Debug.Log("hit+:" + gameObject.name);
-		}
+		public bool IsAlive { get {return (property.life > 0);} }
+		abstract public void OnDamage(ObjectProperty uInfo);
+
 		void OnLevelWasLoaded () {
-			ReturnToPool();
+			property.ReturnToPool();
 		}	
 	}
 }

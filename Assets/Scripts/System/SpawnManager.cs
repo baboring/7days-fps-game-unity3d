@@ -42,8 +42,9 @@ namespace SB {
 					posPrefab = spots;
 					break;
 			}
+				int index = 0;//Random.Range(0, posPrefab.Length);
 
-			if (objPrefab != null && posPrefab != null && Facade_NavMesh.RandomPoint(posPrefab[Random.Range(0, posPrefab.Length)].position, 10f, out point)) {
+			if (objPrefab != null && posPrefab != null && Facade_NavMesh.RandomPoint(posPrefab[index].position, 10f, out point)) {
 				return SpawnObject(objPrefab[Random.Range(0, objPrefab.Length)],point);
 			}
 			return default(PooledObject);
@@ -53,7 +54,8 @@ namespace SB {
 		void Update () {
 			if(Input.GetKeyDown(KeyCode.Tab)) {
 				Vector3 point;
-				if (Facade_NavMesh.RandomPoint(spots[Random.Range(0, spots.Length)].position, 10f, out point)) {
+				int index = 0;//Random.Range(0, spots.Length);
+				if (Facade_NavMesh.RandomPoint(spots[index].position, 10f, out point)) {
 					SpawnObject(objPrefabNPC[Random.Range(0, objPrefabNPC.Length)],point);
 				}
 			}

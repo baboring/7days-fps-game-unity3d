@@ -247,7 +247,7 @@ namespace Ai
 
 		public object Event {
 			set {
-				Debug.Log("FSM Event:"+value.ToString());
+				//Debug.Log("FSM Event:"+value.ToString());
 				if (value == null) {
 					currentState.Exit(this);
 					currentState = null;

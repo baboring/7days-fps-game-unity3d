@@ -5,18 +5,18 @@ using UnityEngine;
 
 namespace SB {
 
-	[RequireComponent(typeof(CharacterController),typeof(UnitProperty))]
+	[RequireComponent(typeof(CharacterController),typeof(ObjectProperty))]
 	[RequireComponent(typeof(Animator))]
 	public class PlayerController : PooledObject {
 
 		public Bullet bullet;
-		public GameObject bulletSpawn;
+		public Weapon Weapon;
 		// Use this for initialization
 		public Transform eyesTransform;
 		public float jumpSpeed = 5.0f;
 		public float gravity = 10;
 
-		private UnitProperty unitInfo;
+		private ObjectProperty unitInfo;
 
 		Animator animator;
 		CharacterController controller;
@@ -24,7 +24,7 @@ namespace SB {
 
 
 		void Start () {
-			unitInfo = GetComponent<UnitProperty>();
+			unitInfo = GetComponent<ObjectProperty>();
 			animator = GetComponent<Animator>();
 			controller = GetComponent<CharacterController>();
 		}
@@ -45,21 +45,22 @@ namespace SB {
 		// Update is called once per frame
 
 		bool isJump = false;
-		void InputMovement() {
+		void InputMovement(bool IsSprnit) {
+
 			// look cam view
 			if(eyesTransform) {
 				moveDirection = eyesTransform.forward * Input.GetAxis("Vertical");
 	//			moveDirection +=  Vector3.Cross(eyesTransform.up, eyesTransform.forward).normalized * Input.GetAxis("Horizontal");
 				moveDirection +=  eyesTransform.right * Input.GetAxis("Horizontal");
-				animator.SetFloat("horz",Input.GetAxis("Horizontal") * unitInfo.walkSpeed);
-				animator.SetFloat("vert",Input.GetAxis("Vertical") * unitInfo.walkSpeed);
+				animator.SetFloat("horz",Input.GetAxis("Horizontal") * ((IsSprnit)? unitInfo.runSpeed : unitInfo.walkSpeed));
+				animator.SetFloat("vert",Input.GetAxis("Vertical") * ((IsSprnit)? unitInfo.runSpeed : unitInfo.walkSpeed));
 			}
 			else {
 				// look back view
 				moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 				moveDirection = transform.TransformDirection(moveDirection);
 				animator.SetFloat("horz",moveDirection.x * unitInfo.walkSpeed);
-				animator.SetFloat("vert",moveDirection.z * unitInfo.walkSpeed);
+				animator.SetFloat("vert",moveDirection.z * ((IsSprnit)? unitInfo.runSpeed : unitInfo.walkSpeed));
 			}
 
 			if (controller.isGrounded && Input.GetButton("Jump")) {
@@ -68,49 +69,30 @@ namespace SB {
 			}
 		}
 
-		void Shoot(float force)
+		void Shoot()
 		{
-			Bullet clone = bullet.Instanciate<Bullet>();
-			clone.transform.position = bulletSpawn.transform.position;
-			clone.transform.rotation = bulletSpawn.transform.rotation;
-
-			int maskLayer = Facade_NavMesh.GetLayerMask(
-				LayerId.NonPlayer,
-				LayerId.Geometry,
-				LayerId.Obstacle); 
-			// current look direction default
-			Vector3 lookDir = transform.TransformDirection(Vector3.forward);
-
-			// Camera direction default
-			if(eyesTransform) {
-				Debug.Assert(null != eyesTransform,"look object is null");
-				lookDir = eyesTransform.forward;
+			Debug.Assert(null != Weapon,"weapon is null!!");
+			if(Weapon.Shoot(bullet, unitInfo, eyesTransform)) {
+				//Debug.Log("Shoot!!");
 			}
-
-			//	Adjust aim more precisly 
-			// RaycastHit hit;
-			// if(Physics.Raycast(transform.position, lookDir, out hit, 1000 ,maskLayer)) {
-			// 	Vector3 target = transform.position + (lookDir * hit.distance);
-			// 	lookDir = (target - bulletSpawn.transform.position).normalized;
-			// }
-			
-			clone.OnFire(unitInfo,lookDir,force);
 		}		
 		void Update() {
 			if(Input.GetButtonDown("Fire1"))
-				Shoot(100);
+				Shoot();
 		}
 		void FixedUpdate () {
 
-			InputMovement();
+			bool IsSprnit = Input.GetKey(KeyCode.LeftShift);
+
+			InputMovement(IsSprnit);
 
 			// calculate the surface shape
 			RaycastHit hitInfo;
 			Physics.SphereCast(transform.position, controller.radius, Vector3.down, out hitInfo,
 								controller.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
 			Vector3 move = Vector3.ProjectOnPlane(moveDirection, hitInfo.normal).normalized;
-			moveDirection.x = move.x * unitInfo.walkSpeed;
-			moveDirection.z = move.z * unitInfo.walkSpeed;
+			moveDirection.x = move.x *  ((IsSprnit)? unitInfo.runSpeed : unitInfo.walkSpeed);
+			moveDirection.z = move.z *  ((IsSprnit)? unitInfo.runSpeed : unitInfo.walkSpeed);
 			
 			if (controller.isGrounded) {
 

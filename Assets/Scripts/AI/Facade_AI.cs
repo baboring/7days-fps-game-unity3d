@@ -15,7 +15,7 @@ namespace SB {
         static bool debug_on = false;
 
         // detecting target
-        static public bool DetectTarget(UnitProperty owner, out UnitProperty target ) {
+        static public bool DetectTarget(ObjectProperty owner, out ObjectProperty target ) {
 
             Debug.Assert(owner != null,"unit owener is null");
             target = null;
@@ -37,7 +37,7 @@ namespace SB {
                 {
                     if(debug_on)
                         Debug.DrawRay(pos, direction * hit.distance, Color.green);
-                    var unit_info = hit.collider.GetComponent<UnitProperty>();
+                    var unit_info = hit.collider.GetComponent<ObjectProperty>();
                     if (unit_info && unit_info.ally != owner.ally) {
                         //Enemy was seen
                         Debug.Log("Find taret:" + unit_info.gameObject.name);

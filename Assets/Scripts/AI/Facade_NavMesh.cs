@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿/* *************************************************
+*  Created:  7/22/2017, 3:55:16 PM
+*  File:     Facade_NavMesh.cs
+*  Author:   Benjamin
+*  Purpose:  []
+****************************************************/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;

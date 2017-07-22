@@ -8,6 +8,7 @@ public class Startup : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		R.Create();		
 		Facade_Coroutine.Sequnce(this,
             Facade_Coroutine.Wait(() => {
                 // start at Map1
