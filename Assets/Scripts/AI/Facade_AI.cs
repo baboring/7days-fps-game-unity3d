@@ -40,7 +40,7 @@ namespace SB {
                     var unit_info = hit.collider.GetComponent<ObjectProperty>();
                     if (unit_info && unit_info.ally != property.ally) {
                         //Enemy was seen
-                        Debug.Log("- Found out taret:" + unit_info.gameObject.name);
+                        //Debug.Log("- Found out taret:" + unit_info.gameObject.name);
                         target = unit_info;
                     }
                 }
@@ -53,6 +53,17 @@ namespace SB {
 
             return (target != null);
         }
+
+        public static bool IsRaycastHit(ObjectProperty origin, ObjectProperty target, float range) {
+            RaycastHit hit;
+            return Physics.Raycast(origin.transform.position, Facade_AI.GetDistance(target,origin), out hit, range);
+        }
+
+		// Get Distance
+		public static Vector3 GetDistance(ObjectProperty a, ObjectProperty b) {
+			return a.transform.position - b.transform.position;
+		}
+        
     }
 }
 

@@ -10,13 +10,13 @@ namespace SB {
 	public class PlayerController : PooledObject {
 
 		public Bullet bullet;
-		public Weapon Weapon;
+		public Weapon weapon;
 		// Use this for initialization
 		public Transform eyesTransform;
 		public float jumpSpeed = 5.0f;
 		public float gravity = 10;
 
-		private ObjectProperty unitInfo;
+		private ObjectProperty property;
 
 		Animator animator;
 		CharacterController controller;
@@ -24,7 +24,7 @@ namespace SB {
 
 
 		void Start () {
-			unitInfo = GetComponent<ObjectProperty>();
+			property = GetComponent<ObjectProperty>();
 			animator = GetComponent<Animator>();
 			controller = GetComponent<CharacterController>();
 		}
@@ -52,15 +52,15 @@ namespace SB {
 				moveDirection = eyesTransform.forward * Input.GetAxis("Vertical");
 	//			moveDirection +=  Vector3.Cross(eyesTransform.up, eyesTransform.forward).normalized * Input.GetAxis("Horizontal");
 				moveDirection +=  eyesTransform.right * Input.GetAxis("Horizontal");
-				animator.SetFloat("horz",Input.GetAxis("Horizontal") * ((IsSprnit)? unitInfo.tb.runSpeed : unitInfo.tb.walkSpeed));
-				animator.SetFloat("vert",Input.GetAxis("Vertical") * ((IsSprnit)? unitInfo.tb.runSpeed : unitInfo.tb.walkSpeed));
+				animator.SetFloat("horz",Input.GetAxis("Horizontal") * ((IsSprnit)? property.tb.runSpeed : property.tb.walkSpeed));
+				animator.SetFloat("vert",Input.GetAxis("Vertical") * ((IsSprnit)? property.tb.runSpeed : property.tb.walkSpeed));
 			}
 			else {
 				// look back view
 				moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 				moveDirection = transform.TransformDirection(moveDirection);
-				animator.SetFloat("horz",moveDirection.x * unitInfo.tb.walkSpeed);
-				animator.SetFloat("vert",moveDirection.z * ((IsSprnit)? unitInfo.tb.runSpeed : unitInfo.tb.walkSpeed));
+				animator.SetFloat("horz",moveDirection.x * property.tb.walkSpeed);
+				animator.SetFloat("vert",moveDirection.z * ((IsSprnit)? property.tb.runSpeed : property.tb.walkSpeed));
 			}
 
 			if (controller.isGrounded && Input.GetButton("Jump")) {
@@ -71,8 +71,8 @@ namespace SB {
 
 		void Shoot()
 		{
-			Debug.Assert(null != Weapon,"weapon is null!!");
-			if(Weapon.Shoot(bullet, unitInfo, eyesTransform)) {
+			Debug.Assert(null != weapon,"weapon is null!!");
+			if(weapon.Shoot(bullet, property, eyesTransform)) {
 				//Debug.Log("Shoot!!");
 			}
 		}		
@@ -91,8 +91,8 @@ namespace SB {
 			Physics.SphereCast(transform.position, controller.radius, Vector3.down, out hitInfo,
 								controller.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
 			Vector3 move = Vector3.ProjectOnPlane(moveDirection, hitInfo.normal).normalized;
-			moveDirection.x = move.x *  ((IsSprnit)? unitInfo.tb.runSpeed : unitInfo.tb.walkSpeed);
-			moveDirection.z = move.z *  ((IsSprnit)? unitInfo.tb.runSpeed : unitInfo.tb.walkSpeed);
+			moveDirection.x = move.x *  ((IsSprnit)? property.tb.runSpeed : property.tb.walkSpeed);
+			moveDirection.z = move.z *  ((IsSprnit)? property.tb.runSpeed : property.tb.walkSpeed);
 			
 			if (controller.isGrounded) {
 

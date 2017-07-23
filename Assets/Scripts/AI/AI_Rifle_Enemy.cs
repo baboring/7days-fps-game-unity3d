@@ -18,7 +18,7 @@ namespace SB {
 		AIEntity _aiEntity = new AIEntity();
 
 		// definition state
-		enum eState {
+		enum eEntityState {
 			Wander,
 			Search,
 			Chase,
@@ -35,11 +35,11 @@ namespace SB {
 			class FSM : StateTransitionTable {}
 			public AIEntity() {
 				transitionTable = new FSM();
-				transitionTable.SetState(eState.Wander,new WanderState());
-				transitionTable.SetState(eState.Search,new StateSearch());
-				transitionTable.SetState(eState.Chase,new StateChase());
-				transitionTable.SetState(eState.Runaway,new StateRunaway());
-				transitionTable.SetState(eState.Attack,new StateAttack());
+				transitionTable.SetState(eEntityState.Wander,new WanderState());
+				transitionTable.SetState(eEntityState.Search,new StateSearch());
+				transitionTable.SetState(eEntityState.Chase,new StateChase());
+				transitionTable.SetState(eEntityState.Runaway,new StateRunaway());
+				transitionTable.SetState(eEntityState.Attack,new StateAttack());
 			}
 
 			public void Reset(AI_Rifle_Enemy Ai) {
@@ -70,13 +70,13 @@ namespace SB {
 						// check distance for attacking or  
 						Vector3 distance = entity.target.transform.position - entity.property.transform.position;
 						if(distance.magnitude < entity.property.tb.attackRange)
-							entity.Event = eState.Attack;
+							entity.Event = eEntityState.Attack;
 						else
-							entity.Event = eState.Chase;
+							entity.Event = eEntityState.Chase;
 						return;
 					}
 					// check point 2
-					else if(entity.Ai.IsStoped) {
+					else if(!entity.Ai.IsMoving) {
 
 						if(Facade_NavMesh.RandomRangePoint(
 							entity.property.transform.position, 
@@ -95,7 +95,7 @@ namespace SB {
 			public void Execute(Entity e){
 				AIEntity entity = (AIEntity)e;
 
-				entity.Event = eState.Wander;
+				entity.Event = eEntityState.Wander;
 			}
 		}
 
@@ -115,16 +115,86 @@ namespace SB {
 			public void Execute(Entity e){
 				AIEntity entity = (AIEntity)e;
 
+				// check point 1
+				{
+					// check attack condition
+					ObjectProperty target;					
+					if(Facade_AI.DetectTarget(entity.property, entity.property.tb.attackRange, out target)) {
+						// replace target and mode change to attack
+						entity.Ai.agent.isStopped = true;
+						entity.target = target;
+						entity.Event = eEntityState.Attack;
+						return;
+					}
+				}
+				//check point 2
+				{
+					// follow target if it is in chaseRange 
+					if(entity.target) {
+						Vector3 distance = Facade_AI.GetDistance(entity.target, entity.property);
+						if(distance.magnitude < entity.property.tb.chaseRange) {
+							entity.Ai.agent.destination = entity.target.transform.position;
+							return;
+						}
+					}
+				}
+
 				// check reach them and something
-				if(entity.Ai.IsStoped)
-					entity.Event = eState.Search;
+				if(!entity.Ai.IsMoving)
+					entity.Event = eEntityState.Wander;
 			}
 		}
 
+		// Attack State
 		class StateAttack : IState {
-			public void Enter(Entity e) {}
-			public void Exit(Entity e){}
+			private float elapsedTime; 
+			public void Enter(Entity e) {
+				AIEntity entity = (AIEntity)e;
+				entity.Ai.agent.isStopped = true;
+				entity.Ai.OnAttack(entity.target);
+				elapsedTime = float.MaxValue;
+			}
+			public void Exit(Entity e){
+				AIEntity entity = (AIEntity)e;
+				if(entity.Ai.animator)
+					entity.Ai.animator.SetBool("attack",false);
+			}
 			public void Execute(Entity e){
+				AIEntity entity = (AIEntity)e;
+
+				// check point 1
+				{
+					// check still in attack range ( not in sight)
+					if(!Facade_AI.IsRaycastHit(entity.property, entity.target, entity.property.tb.attackRange)) {
+						// replace target and mode change to attack
+						Vector3 distance = Facade_AI.GetDistance(entity.target, entity.property);
+						if(distance.magnitude < entity.property.tb.chaseRange)
+							entity.Event = eEntityState.Chase;
+						else
+							entity.Event = eEntityState.Search;
+						return;
+					}
+				}
+				// check point 2
+				{
+					float temp_interval_for_attack = 1.0f;
+					// attack processing
+					if(elapsedTime > temp_interval_for_attack) {
+						elapsedTime = 0;
+						// attack
+						entity.Ai.OnAttack(entity.target);
+					}
+					if(entity.Ai.animator)
+						entity.Ai.animator.SetBool("attack",true);
+					// increase elapse time
+					elapsedTime += Time.deltaTime;
+				}
+
+				float slerpTime = 10.0f;
+				// look at the target
+				Vector3 look = Facade_AI.GetDistance(entity.target, entity.property).normalized;
+				entity.property.transform.forward = Vector3.Lerp(entity.property.transform.forward, look, slerpTime * Time.deltaTime);
+
 
 			}
 		}	
@@ -145,7 +215,7 @@ namespace SB {
 		{
 			base.OnEnable();
 			_aiEntity.Reset(this);
-			_aiEntity.Event = eState.Wander;
+			_aiEntity.Event = eEntityState.Wander;
 			//Debug.Log("Enabled 1/"+ this.GetType().Name);
 		}
 		// Update is called once per frame

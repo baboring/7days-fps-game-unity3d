@@ -32,8 +32,10 @@ namespace SB {
 		}
 		
 		public bool IsAlive { get {return property.isAlive;} }
-		abstract public void OnDamage(ObjectProperty uInfo);
-		abstract public void OnDie(ObjectProperty uInfo);
+
+		abstract public void OnAttack(ObjectProperty obj);
+		abstract public void OnDamage(ObjectProperty obj);
+		abstract public void OnDie(ObjectProperty obj);
 
 		public void DisposeForPool() {
 

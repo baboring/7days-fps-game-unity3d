@@ -27,7 +27,7 @@ namespace SB {
 			if(isHit)
 				return;
 			int maskLayer = Facade_NavMesh.GetLayerMask(
-				LayerId.NonPlayer,
+				((owner.ally == AliasType.NonPlayer)? LayerId.PlayerAllias : LayerId.NonPlayer),
 				LayerId.Geometry,
 				LayerId.Obstacle); 
 			// Vector3 fwd = transform.TransformDirection(Vector3.forward);

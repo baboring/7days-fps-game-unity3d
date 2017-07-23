@@ -12,8 +12,7 @@ using UnityEngine.AI;
 namespace SB {
 
 	public enum LayerId {
-		PlayerOwner = 8,
-		PlayerOther = 9,
+		PlayerAllias = 8,
 		NonPlayer = 10,		
 		Geometry = 14,
 		Obstacle = 15,
@@ -40,7 +39,9 @@ namespace SB {
 				mask += (1 << (int)layer);
 			}
 			return mask;
-		} 
+		}
+
+
 	}
 
 }

@@ -7,8 +7,12 @@ namespace SB {
 	[RequireComponent(typeof(NavMeshAgent))]
 	public class AI_Unit : Unit {
 
+		// weapon and bullet
+		public Weapon weapon;
+		public Bullet bullet;
+		
 		protected NavMeshAgent agent;
-		private Animator animator;
+		protected Animator animator;
 		Vector3 moveDirection = Vector3.zero;
 
 		// Use this for initialization
@@ -40,8 +44,8 @@ namespace SB {
 			//Debug.Log("Enabled 0/"+ this.GetType().Name);
 							
 		}
-		protected bool IsStoped {
-			get { return agent && (agent.isStopped || !agent.hasPath);}
+		protected bool IsMoving {
+			get { return agent && (!agent.isStopped && agent.hasPath);}
 		}
 		
 		void FixedUpdate () {
@@ -64,7 +68,7 @@ namespace SB {
 		}
 
 		public void OnAnimationTrigger(string arg) {
-			Debug.Log("OnAnimationTrigger:" + arg);
+			//Debug.Log("OnAnimationTrigger:" + arg);
 			switch(arg) {
 				case "enterDamage":
 					agent.isStopped = true;
@@ -97,6 +101,18 @@ namespace SB {
 			return attacker.tb.attack_power;
 		}
 
+		override public void OnAttack(ObjectProperty target) {
+			Debug.Assert(null!=target,"target is null");
+			if(target.isAlive) {
+				SetAnimationTrigger("fire");
+				// weapon
+				Debug.Assert(null != weapon,"weapon is null!!");
+				if(weapon.Shoot(bullet, property, weapon.transform)) {
+					//Debug.Log("Shoot!!");
+				}
+			}
+		}
+
 		override public void OnDamage(ObjectProperty attacker) {
 
 			if(!IsAlive)
@@ -122,6 +138,7 @@ namespace SB {
 			Debug.Assert(IsAlive,"die again,this unit is already death");
 			Debug.Log("Die from " + ((null != attacker)?attacker.transform.gameObject.name : ""));
 
+			property.isAlive = false;
 			SetAnimationTrigger("dying");
 			SpawnManager.instance.Remove(this.property);
 		}
