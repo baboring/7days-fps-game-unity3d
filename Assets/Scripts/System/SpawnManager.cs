@@ -71,8 +71,7 @@ namespace SB {
 		}
 
 		// spawn randowm object in type
-		public PooledObject Spawn(eSpawn type) {
-			Vector3 point;
+		public PooledObject Spawn(eSpawn type, Vector3 initPos = default(Vector3)) {
 			PooledObject[] objPrefab = null;
 			Transform[] posPrefab = null;
 			switch(type) {
@@ -86,10 +85,20 @@ namespace SB {
 					break;
 			}
 			int index = Random.Range(0, posPrefab.Length);
+			if (objPrefab != null && posPrefab != null) { 
+				const int tryCnt = 5;
+				if(initPos == default(Vector3)) {
+					for(int i=0;i<tryCnt;++i) {
+						if(Facade_NavMesh.RandomRangePoint(posPrefab[index].position, 0, 10f, out initPos))
+							break;
+					}
+				}
 
-			if (objPrefab != null && posPrefab != null 
-				&& Facade_NavMesh.RandomRangePoint(posPrefab[index].position, 0, 10f, out point)) {
-				var objSpawn = SpawnObject(objPrefab[Random.Range(0, objPrefab.Length)],point);
+				// fails to found the position
+				if(initPos == default(Vector3))
+					return null;
+
+				var objSpawn = SpawnObject(objPrefab[Random.Range(0, objPrefab.Length)],initPos);
 				// save for searching in AI
 				ObjectProperty property = objSpawn as ObjectProperty;
 				if(null != property) {

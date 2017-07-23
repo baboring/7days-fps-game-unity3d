@@ -8,11 +8,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using Ai;
-using SB;
 
 namespace SB {
-
 
 	public class AI_Rifle_Enemy : AI_Unit {
 
@@ -41,8 +38,38 @@ namespace SB {
 
 		override public void OnDamage(ObjectProperty uInfo) {
 			base.OnDamage(uInfo);
+
+			switch((eEntityState)_aiEntity.Event) {
+				case eEntityState.Runaway:
+					break;
+				case eEntityState.Wander:
+				default:
+					agent.ResetPath();
+					break;
+			}
+
 		}		
-		
+		override protected void OnAnimationTrigger(string arg) {
+			base.OnAnimationTrigger(arg);
+
+			switch(arg) {
+				case "enterDamage":
+					if(agent.hasPath)
+						agent.isStopped = true;
+					break;
+				case "leaveDamage":
+					if(agent.hasPath)
+						agent.isStopped = false;
+					break;
+				case "enterDie":
+					agent.isStopped = true;
+					break;
+				case "leaveDie":
+					base.DisposeForPool();
+					break;
+			}
+			
+		}
 				
 		AIEntity _aiEntity = new AIEntity();
 

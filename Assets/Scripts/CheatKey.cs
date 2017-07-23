@@ -31,6 +31,14 @@ public class CheatKey : ManualSingletonMB<CheatKey> {
 		// Cheat spawn
 		if(Input.GetKeyDown(KeyCode.Tab)) 
 			SpawnManager.instance.Spawn(eSpawn.NonPlayer);
+
+		if(Input.GetKeyDown(KeyCode.Alpha1)) {
+
+			// Vector3 lookDir = PlayerController.instance.transform.TransformDirection(Vector3.forward);
+			Vector3 lookDir = PlayerController.instance.eyesTransform.forward;
+			float range = PlayerController.instance.property.tb.sightRange;
+			SpawnManager.instance.Spawn(eSpawn.NonPlayer,PlayerController.instance.transform.position + lookDir * range);
+		} 
 		
 		// all die
 		if(Input.GetKeyDown(KeyCode.Minus)) {

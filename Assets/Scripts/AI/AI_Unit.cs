@@ -48,7 +48,7 @@ namespace SB {
 			get { return agent && (!agent.isStopped && agent.hasPath);}
 		}
 		
-		void FixedUpdate () {
+		protected void FixedUpdate () {
 			if(agent)
 				SetAnimationFloat("forward",agent.velocity.magnitude);
 		}
@@ -67,22 +67,8 @@ namespace SB {
 			}
 		}
 
-		public void OnAnimationTrigger(string arg) {
+		virtual protected void OnAnimationTrigger(string arg) {
 			//Debug.Log("OnAnimationTrigger:" + arg);
-			switch(arg) {
-				case "enterDamage":
-					agent.isStopped = true;
-					break;
-				case "leaveDamage":
-					agent.isStopped = false;
-					break;
-				case "enterDie":
-					agent.isStopped = true;
-					break;
-				case "leaveDie":
-					DisposeForPool();
-					break;
-			}
 		}
 
 		void SetAnimationTrigger(string arg) {
@@ -134,6 +120,7 @@ namespace SB {
 			else 
 				SetAnimationTrigger("damaged");
 		}
+
 		override public void OnDie(ObjectProperty attacker) {
 			Debug.Assert(IsAlive,"die again,this unit is already death");
 			Debug.Log("Die from " + ((null != attacker)?attacker.transform.gameObject.name : ""));

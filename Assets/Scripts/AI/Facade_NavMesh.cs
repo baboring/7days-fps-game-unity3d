@@ -20,6 +20,7 @@ namespace SB {
 	public static class Facade_NavMesh {
 
 		public static bool RandomRangePoint(Vector3 center, float minRange, float maxRange, out Vector3 result) {
+			result = default(Vector3);
 			for (int i = 0; i < 30; i++) {
 				Vector3 randomPoint = center + Random.insideUnitSphere * Random.Range(minRange,maxRange);
 				NavMeshHit hit;
@@ -28,7 +29,6 @@ namespace SB {
 					return true;
 				}
 			}
-			result = Vector3.zero;
 			return false;
 		}
 

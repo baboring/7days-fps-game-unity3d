@@ -9,6 +9,7 @@ namespace SB {
 	[RequireComponent(typeof(Animator))]
 	public class PlayerController : PooledObject {
 
+		public static PlayerController instance;
 		public Bullet bullet;
 		public Weapon weapon;
 		// Use this for initialization
@@ -16,17 +17,21 @@ namespace SB {
 		public float jumpSpeed = 5.0f;
 		public float gravity = 10;
 
-		private ObjectProperty property;
+		public ObjectProperty property;
 
 		Animator animator;
 		CharacterController controller;
 		Vector3 moveDirection;
 
+		void Awake() {
+			instance = this;
+		}
 
 		void Start () {
 			property = GetComponent<ObjectProperty>();
 			animator = GetComponent<Animator>();
 			controller = GetComponent<CharacterController>();
+			property.Reset();
 		}
 
 		public void ConnectToEyes(Transform cam) {
