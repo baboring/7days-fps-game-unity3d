@@ -31,10 +31,6 @@ namespace SB {
 			clone.transform.position = transform.position;
 			clone.transform.rotation = transform.rotation;
 
-			int maskLayer = Facade_NavMesh.GetLayerMask(
-				LayerId.NonPlayer,
-				LayerId.Geometry,
-				LayerId.Obstacle); 
 			// current look direction default
 			Vector3 lookDir = transform.TransformDirection(Vector3.forward);
 
@@ -43,13 +39,6 @@ namespace SB {
 				Debug.Assert(null != eyesTransform,"look object is null");
 				lookDir = eyesTransform.forward;
 			}
-
-			//	Adjust aim more precisly 
-			// RaycastHit hit;
-			// if(Physics.Raycast(transform.position, lookDir, out hit, 1000 ,maskLayer)) {
-			// 	Vector3 target = transform.position + (lookDir * hit.distance);
-			// 	lookDir = (target - transform.position).normalized;
-			// }
 			
 			if(clone.OnFire(owner,lookDir,force)) {
 				if(effectSoundFire)

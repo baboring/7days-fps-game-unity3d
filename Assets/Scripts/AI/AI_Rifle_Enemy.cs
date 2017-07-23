@@ -15,6 +15,35 @@ namespace SB {
 
 
 	public class AI_Rifle_Enemy : AI_Unit {
+
+		// Use this for initialization
+		protected void Awake () {
+			base.Awake();
+		}
+		
+		protected void OnEnable()
+		{
+			base.OnEnable();
+			_aiEntity.Reset(this);
+			_aiEntity.Event = eEntityState.Wander;
+			//Debug.Log("Enabled 1/"+ this.GetType().Name);
+		}
+		// Update is called once per frame
+		void Update () {
+
+			if(IsAlive && _aiEntity.Ai) {
+				_aiEntity.UpdateState();
+				if(_aiEntity.destPos != Vector3.zero)
+					Debug.DrawRay(_aiEntity.property.transform.position, _aiEntity.destPos - _aiEntity.property.transform.position, Color.green);
+				
+			}
+		}
+
+		override public void OnDamage(ObjectProperty uInfo) {
+			base.OnDamage(uInfo);
+		}		
+		
+				
 		AIEntity _aiEntity = new AIEntity();
 
 		// definition state
@@ -88,6 +117,9 @@ namespace SB {
 				}
 			}
 		}
+
+		// Search target
+		#region State Search ---------------
 		class StateSearch : IState {
 
 			public void Enter(Entity e) {}
@@ -98,8 +130,10 @@ namespace SB {
 				entity.Event = eEntityState.Wander;
 			}
 		}
+		#endregion
 
 		// Chasing target
+		#region State Chase ---------------
 		class StateChase : IState {
 			public void Enter(Entity e) {
 				AIEntity entity = (AIEntity)e;
@@ -144,8 +178,11 @@ namespace SB {
 					entity.Event = eEntityState.Wander;
 			}
 		}
+		#endregion
 
-		// Attack State
+
+		// Attack State 
+		#region State Attack ---------------
 		class StateAttack : IState {
 			private float elapsedTime; 
 			public void Enter(Entity e) {
@@ -198,6 +235,11 @@ namespace SB {
 
 			}
 		}	
+		#endregion
+
+
+		// Attack Runaway 
+		#region State Attack ---------------
 		class StateRunaway : IState {
 			public void Enter(Entity e) {}
 			public void Exit(Entity e){}
@@ -205,33 +247,9 @@ namespace SB {
 
 			}
 		}
-
-		// Use this for initialization
-		protected void Awake () {
-			base.Awake();
-		}
+		#endregion
 		
-		protected void OnEnable()
-		{
-			base.OnEnable();
-			_aiEntity.Reset(this);
-			_aiEntity.Event = eEntityState.Wander;
-			//Debug.Log("Enabled 1/"+ this.GetType().Name);
-		}
-		// Update is called once per frame
-		void Update () {
 
-			if(IsAlive && _aiEntity.Ai) {
-				_aiEntity.UpdateState();
-				if(_aiEntity.destPos != Vector3.zero)
-					Debug.DrawRay(_aiEntity.property.transform.position, _aiEntity.destPos - _aiEntity.property.transform.position, Color.green);
-				
-			}
-		}
 
-		override public void OnDamage(ObjectProperty uInfo) {
-			base.OnDamage(uInfo);
-		}		
-		
 	}
 }
