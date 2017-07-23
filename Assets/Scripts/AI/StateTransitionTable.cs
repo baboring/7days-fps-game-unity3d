@@ -34,8 +34,8 @@ namespace SB
 
 	// 기본적인 상태 이벤트
 	abstract public class Entity {
-		protected Ai.StateTransitionTable transitionTable = null;
-		protected IState currentState = null;
+		protected StateTransitionTable transitionTable = null;
+		public IState currentState {get; private set;}
 		protected object currentEvent;
 
 		public void UpdateState() {

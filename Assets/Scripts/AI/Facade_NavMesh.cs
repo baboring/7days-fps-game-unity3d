@@ -16,6 +16,7 @@ namespace SB {
 		NonPlayer = 10,		
 		Geometry = 14,
 		Obstacle = 15,
+		Bullet = 16,
 	}
 	public static class Facade_NavMesh {
 

@@ -13,7 +13,6 @@ namespace SB {
 		
 		protected NavMeshAgent agent;
 		protected Animator animator;
-		Vector3 moveDirection = Vector3.zero;
 
 		// Use this for initialization
 		protected void Awake () {

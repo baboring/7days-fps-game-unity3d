@@ -43,7 +43,10 @@ namespace SB {
 		[System.NonSerialized]
 		public bool isAlive = true;
 
-		void Awake() {
+        // support variable
+        Vector3 vEyeLevel;
+
+        void Awake() {
 			// attach default owner
 			owner = this.GetComponent<Unit>();
 			Reset();
@@ -55,12 +58,28 @@ namespace SB {
 			Debug.Assert(null != tb,"Not exist table id : "+tableId);
 			this.tb = tb;
 
-			// variable reset
-			life = tb.life;
+            vEyeLevel = new Vector3(0, tb.eyeLevel, 0);
+            // variable reset
+            life = tb.max_life;
 			isAlive = true;
 			
 			return true;
 		}
 
-	}
+        // Calculate distance between this and another
+        public Vector3 DistanceFrom(ObjectProperty obj) {
+            Debug.Assert(null != obj,"object property is null at distanceFrom");
+            return obj.Position - Position;
+        }
+
+        public Vector3 Position {
+            get {
+                if(type == ObjectType.Bullet)
+                    return transform.position;
+
+                return transform.position + vEyeLevel;
+            }
+        }
+
+    }
 }

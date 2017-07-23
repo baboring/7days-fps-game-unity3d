@@ -10,9 +10,16 @@ using UnityEngine;
 
 namespace SB {
 
+    public enum RaycastResult
+    {
+        Nothing = 0,
+        FoundTarget = 1,
+        BlockedTarget = 2,
+    }
+
     public static class Facade_AI  {
 
-        static bool debug_on = false;
+        static bool debug_on = true;
 
         // detecting target
         static public bool DetectTarget(ObjectProperty property,float range, out ObjectProperty target ) {
@@ -54,16 +61,29 @@ namespace SB {
             return (target != null);
         }
 
-        public static bool IsRaycastHit(ObjectProperty origin, ObjectProperty target, float range) {
+
+        // raycast test
+        public static RaycastResult IsRaycastHit(ObjectProperty origin, ObjectProperty target, float range, int mask = int.MaxValue) {
             RaycastHit hit;
-            return Physics.Raycast(origin.transform.position, Facade_AI.GetDistance(target,origin), out hit, range);
+            if (Physics.Raycast(origin.Position, origin.DistanceFrom(target).normalized, out hit, range, mask)) {
+                if (hit.collider.transform == target.transform)
+                    return RaycastResult.FoundTarget;
+                return RaycastResult.BlockedTarget;
+            }
+            return RaycastResult.Nothing;
         }
 
-		// Get Distance
-		public static Vector3 GetDistance(ObjectProperty a, ObjectProperty b) {
-			return a.transform.position - b.transform.position;
-		}
-        
+        // raycast test
+        public static RaycastResult IsRaycastHit(Transform origin, Transform target, float range, int mask = int.MaxValue) {
+            RaycastHit hit;
+            if(Physics.Raycast(origin.position, origin.DistanceFrom(target).normalized, out hit, range, mask)) {
+                if(hit.collider.transform == target)
+                    return RaycastResult.FoundTarget;
+                return RaycastResult.BlockedTarget;
+            }
+            return RaycastResult.Nothing;
+        }        
+	       
     }
 }
 

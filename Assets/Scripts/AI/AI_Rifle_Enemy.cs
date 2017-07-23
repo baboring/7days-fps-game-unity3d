@@ -25,20 +25,25 @@ namespace SB {
 			_aiEntity.Event = eEntityState.Wander;
 			//Debug.Log("Enabled 1/"+ this.GetType().Name);
 		}
+
 		// Update is called once per frame
 		void Update () {
 
 			if(IsAlive && _aiEntity.Ai) {
 				_aiEntity.UpdateState();
-				if(_aiEntity.destPos != Vector3.zero)
-					Debug.DrawRay(_aiEntity.property.transform.position, _aiEntity.destPos - _aiEntity.property.transform.position, Color.green);
-				
-			}
-		}
 
-		override public void OnDamage(ObjectProperty uInfo) {
-			base.OnDamage(uInfo);
+				if(_aiEntity.destination != Vector3.zero)
+					Debug.DrawRay(_aiEntity.property.transform.position, _aiEntity.destination - _aiEntity.property.transform.position, Color.green);
+				if(_aiEntity.target)
+                    Debug.DrawRay(_aiEntity.property.Position, _aiEntity.property.DistanceFrom(_aiEntity.target), Color.red);
 
+            }
+        }
+
+		override public void OnDamage(ObjectProperty skill) {
+			base.OnDamage(skill);
+
+			_aiEntity.triggerDamage = skill;
 			switch((eEntityState)_aiEntity.Event) {
 				case eEntityState.Runaway:
 					break;
@@ -47,29 +52,17 @@ namespace SB {
 					agent.ResetPath();
 					break;
 			}
-
 		}		
 		override protected void OnAnimationTrigger(string arg) {
 			base.OnAnimationTrigger(arg);
 
-			switch(arg) {
-				case "enterDamage":
-					if(agent.hasPath)
-						agent.isStopped = true;
-					break;
-				case "leaveDamage":
-					if(agent.hasPath)
-						agent.isStopped = false;
-					break;
-				case "enterDie":
-					agent.isStopped = true;
-					break;
-				case "leaveDie":
-					base.DisposeForPool();
-					break;
-			}
-			
+			_aiEntity.OnAnimationEvent(arg);
 		}
+
+        // life condotion
+        public bool IsRunawayCondition() {
+            return property.life <= property.tb.max_life * 0.2f; 
+        }
 				
 		AIEntity _aiEntity = new AIEntity();
 
@@ -86,7 +79,8 @@ namespace SB {
 			public AI_Rifle_Enemy Ai;
 			public ObjectProperty property;
 			public ObjectProperty target;
-			public Vector3 destPos = Vector3.zero;
+			public Vector3 destination = Vector3.zero;
+			public ObjectProperty triggerDamage;
 
 			class FSM : StateTransitionTable {}
 			public AIEntity() {
@@ -102,7 +96,27 @@ namespace SB {
 				this.Ai = Ai;
 				this.property = Ai.property;
 				this.target = null;
-				this.destPos = Vector3.zero;
+				this.destination = Vector3.zero;
+			}
+
+			public void OnAnimationEvent(string arg) {
+				switch(arg) {
+					case "enterDamage":
+						if(Ai.agent.hasPath)
+							Ai.agent.isStopped = true;
+						break;
+					case "leaveDamage":
+						if(Ai.agent.hasPath)
+							Ai.agent.isStopped = false;
+						break;
+					case "enterDie":
+						Ai.agent.isStopped = true;
+						break;
+					case "leaveDie":
+						Ai.DisposeForPool();
+						break;
+				}
+
 			}
 
 		}
@@ -118,27 +132,44 @@ namespace SB {
 			public void Execute(Entity e){
 				AIEntity entity = (AIEntity)e;
 
-				// check target
-				if(entity.target == null) {
-					// check point 1
+				// check point 1
+				{
+					// damaged first
+					if(entity.triggerDamage) {
+						entity.target = entity.triggerDamage;
+						entity.triggerDamage = null;
+						entity.Event = eEntityState.Search;
+						return;
+					}
+
+					// check target in sight
 					if(Facade_AI.DetectTarget(entity.property, entity.property.tb.sightRange, out entity.target)) {
 						Debug.Log("- Detect palyer!!");
-						// check distance for attacking or  
-						Vector3 distance = entity.target.transform.position - entity.property.transform.position;
+
+                        // check runaway condition (life)
+                        if (entity.Ai.IsRunawayCondition()) {
+                            entity.Event = eEntityState.Runaway;
+                            return;
+                        }
+                        // check distance for attacking or  
+                        Vector3 distance = entity.target.transform.position - entity.property.transform.position;
 						if(distance.magnitude < entity.property.tb.attackRange)
 							entity.Event = eEntityState.Attack;
 						else
 							entity.Event = eEntityState.Chase;
 						return;
 					}
-					// check point 2
-					else if(!entity.Ai.IsMoving) {
+				}
 
+				// check point 2
+				{
+					// change next moving position
+					if(!entity.Ai.IsMoving) {
 						if(Facade_NavMesh.RandomRangePoint(
 							entity.property.transform.position, 
 							entity.property.tb.wander_min_range,
-							entity.property.tb.wander_max_range, out entity.destPos)) {
-							entity.Ai.agent.destination = entity.destPos;
+							entity.property.tb.wander_max_range, out entity.destination)) {
+							entity.Ai.agent.destination = entity.destination;
 						}
 					}
 				}
@@ -149,12 +180,44 @@ namespace SB {
 		#region State Search ---------------
 		class StateSearch : IState {
 
-			public void Enter(Entity e) {}
+			public void Enter(Entity e) {
+				AIEntity entity = (AIEntity)e;
+				entity.Ai.agent.speed = entity.property.tb.runSpeed;
+				if(entity.target != null) {
+					entity.Ai.agent.destination = entity.target.transform.position;
+				}
+			}
 			public void Exit(Entity e){}
 			public void Execute(Entity e){
 				AIEntity entity = (AIEntity)e;
 
-				entity.Event = eEntityState.Wander;
+				// check point 1
+				{
+                    // check runaway condition (life)
+                    if (entity.Ai.IsRunawayCondition()) {
+                        entity.Event = eEntityState.Runaway;
+                        return;
+                    }
+
+                    // check target in sight (Search Range)
+                    if (Facade_AI.DetectTarget(entity.property, entity.property.tb.searchRange, out entity.target)) {
+						Debug.Log("- Detect palyer!!");
+						// check distance for attacking or  
+						Vector3 distance = entity.target.transform.position - entity.property.transform.position;
+						if(distance.magnitude < entity.property.tb.attackRange)
+							entity.Event = eEntityState.Attack;
+						else
+							entity.Event = eEntityState.Chase;
+						return;
+					}
+				}
+
+				// check point 2
+				{
+					// check reach them and something
+					if(!entity.Ai.IsMoving)
+						entity.Event = eEntityState.Wander;					
+				}
 			}
 		}
 		#endregion
@@ -178,21 +241,36 @@ namespace SB {
 
 				// check point 1
 				{
-					// check attack condition
-					ObjectProperty target;					
-					if(Facade_AI.DetectTarget(entity.property, entity.property.tb.attackRange, out target)) {
-						// replace target and mode change to attack
-						entity.Ai.agent.isStopped = true;
-						entity.target = target;
-						entity.Event = eEntityState.Attack;
-						return;
+                    // check runaway condition (life)
+                    if (entity.Ai.IsRunawayCondition()) {
+                        entity.Event = eEntityState.Runaway;
+                        return;
+                    }
+                    // check target in sight ( attack range)
+                    if (entity.target && entity.target.isAlive) {
+                        RaycastResult result = Facade_AI.IsRaycastHit(entity.property, entity.target, entity.property.tb.attackRange);
+                        if (result == RaycastResult.FoundTarget) {
+							entity.Ai.agent.isStopped = true;
+							entity.Event = eEntityState.Attack;
+							return;
+						}
+					}
+					else {
+						ObjectProperty target;					
+						if(Facade_AI.DetectTarget(entity.property, entity.property.tb.attackRange, out target)) {
+							// replace target and mode change to attack
+							entity.Ai.agent.isStopped = true;
+							entity.target = target;
+							entity.Event = eEntityState.Attack;
+							return;
+						}
 					}
 				}
 				//check point 2
 				{
 					// follow target if it is in chaseRange 
 					if(entity.target) {
-						Vector3 distance = Facade_AI.GetDistance(entity.target, entity.property);
+						Vector3 distance = entity.property.DistanceFrom(entity.target);
 						if(distance.magnitude < entity.property.tb.chaseRange) {
 							entity.Ai.agent.destination = entity.target.transform.position;
 							return;
@@ -208,7 +286,7 @@ namespace SB {
 		#endregion
 
 
-		// Attack State 
+		// Attack target 
 		#region State Attack ---------------
 		class StateAttack : IState {
 			private float elapsedTime; 
@@ -228,10 +306,16 @@ namespace SB {
 
 				// check point 1
 				{
-					// check still in attack range ( not in sight)
-					if(!Facade_AI.IsRaycastHit(entity.property, entity.target, entity.property.tb.attackRange)) {
+                    // check runaway condition (life)
+                    if(entity.Ai.IsRunawayCondition()) {
+                        entity.Event = eEntityState.Runaway;
+                        return;
+                    }
+                    // check still in attack range ( not in sight)
+                    RaycastResult result = Facade_AI.IsRaycastHit(entity.property, entity.target, entity.property.tb.attackRange);
+                    if (result != RaycastResult.FoundTarget) {
 						// replace target and mode change to attack
-						Vector3 distance = Facade_AI.GetDistance(entity.target, entity.property);
+						Vector3 distance = entity.property.DistanceFrom(entity.target);
 						if(distance.magnitude < entity.property.tb.chaseRange)
 							entity.Event = eEntityState.Chase;
 						else
@@ -256,7 +340,7 @@ namespace SB {
 
 				float slerpTime = 10.0f;
 				// look at the target
-				Vector3 look = Facade_AI.GetDistance(entity.target, entity.property).normalized;
+				Vector3 look = entity.property.DistanceFrom(entity.target).normalized;
 				entity.property.transform.forward = Vector3.Lerp(entity.property.transform.forward, look, slerpTime * Time.deltaTime);
 
 
@@ -265,8 +349,8 @@ namespace SB {
 		#endregion
 
 
-		// Attack Runaway 
-		#region State Attack ---------------
+		// Runaway from target  
+		#region State RunAway ---------------
 		class StateRunaway : IState {
 			public void Enter(Entity e) {}
 			public void Exit(Entity e){}

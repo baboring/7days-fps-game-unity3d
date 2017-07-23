@@ -32,4 +32,11 @@ namespace SB {
         }
 	}
 
+	public static class TransformExtensionMethods
+	{
+        public static Vector3 DistanceFrom(this Transform owner, Transform target) {
+			return target.position - owner.position;
+        }
+	}    
+
 }
