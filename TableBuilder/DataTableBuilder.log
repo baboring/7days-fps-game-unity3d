@@ -1,33 +1,33 @@
 ------------------ Log start ------------------
-2017-07-23 14:32:50 INFO - Build : DataTableBuilder.ini
-2017-07-23 14:32:50 DEBUG - {"Project":"FPS Test Project", "Version":"1.0.0", "Date":"2017/07/22", "Desc":"<<<< Resource ID Configuration information >>>>>"}
-2017-07-23 14:32:50 INFO - ReadCSV : csv_Data/PropertyTable.csv
-2017-07-23 14:32:50 INFO - ReadCSV : csv_Data/SecureInfo.csv
-2017-07-23 14:32:50 INFO - ReadCSV : csv_Data/ConstantTable.csv
-2017-07-23 14:32:50 INFO -  - BuildLoadFunction
-2017-07-23 14:32:50 INFO -  - BuildTableClass
-2017-07-23 14:32:50 INFO -  - Build members
-2017-07-23 14:32:50 INFO -  - Build Enumeration
-2017-07-23 14:32:50 INFO -  - Build Class Constructor
-2017-07-23 14:32:50 INFO -  - Build members
-2017-07-23 14:32:50 INFO -  - Build Enumeration
-2017-07-23 14:32:50 INFO -  - Build Class Constructor
-2017-07-23 14:32:50 INFO -  - Build members
-2017-07-23 14:32:50 INFO -  - Build Enumeration
-2017-07-23 14:32:50 INFO -  - Build Class Constructor
-2017-07-23 14:32:50 INFO -  - BuildTableClass
-2017-07-23 14:32:50 INFO -  - Build members
-2017-07-23 14:32:50 INFO -  - Build Enumeration
-2017-07-23 14:32:50 INFO -  - Build Class Constructor
-2017-07-23 14:32:50 INFO -  - Build members
-2017-07-23 14:32:50 INFO -  - Build Enumeration
-2017-07-23 14:32:50 INFO -  - Build Class Constructor
-2017-07-23 14:32:50 INFO -  - BuildTableClass
-2017-07-23 14:32:50 INFO -  - Build members
-2017-07-23 14:32:50 INFO -  - Build Enumeration
-2017-07-23 14:32:50 INFO -  - Build Class Constructor
-2017-07-23 14:32:50 INFO -  - Build members
-2017-07-23 14:32:50 INFO -  - Build Enumeration
-2017-07-23 14:32:50 INFO -  - Build Class Constructor
-2017-07-23 14:32:51 INFO - Write Build Script : ..\Assets\Resources\DataTableR.cs
-2017-07-23 14:32:51 INFO - Build complete !!!!
+2017-07-23 15:14:48 INFO - Build : DataTableBuilder.ini
+2017-07-23 15:14:48 DEBUG - {"Project":"FPS Test Project", "Version":"1.0.0", "Date":"2017/07/22", "Desc":"<<<< Resource ID Configuration information >>>>>"}
+2017-07-23 15:14:48 INFO - ReadCSV : csv_Data/PropertyTable.csv
+2017-07-23 15:14:48 INFO - ReadCSV : csv_Data/SecureInfo.csv
+2017-07-23 15:14:48 INFO - ReadCSV : csv_Data/ConstantTable.csv
+2017-07-23 15:14:48 INFO -  - BuildLoadFunction
+2017-07-23 15:14:48 INFO -  - BuildTableClass
+2017-07-23 15:14:48 INFO -  - Build members
+2017-07-23 15:14:48 INFO -  - Build Enumeration
+2017-07-23 15:14:48 INFO -  - Build Class Constructor
+2017-07-23 15:14:48 INFO -  - Build members
+2017-07-23 15:14:48 INFO -  - Build Enumeration
+2017-07-23 15:14:48 INFO -  - Build Class Constructor
+2017-07-23 15:14:48 INFO -  - Build members
+2017-07-23 15:14:48 INFO -  - Build Enumeration
+2017-07-23 15:14:48 INFO -  - Build Class Constructor
+2017-07-23 15:14:48 INFO -  - BuildTableClass
+2017-07-23 15:14:48 INFO -  - Build members
+2017-07-23 15:14:48 INFO -  - Build Enumeration
+2017-07-23 15:14:48 INFO -  - Build Class Constructor
+2017-07-23 15:14:48 INFO -  - Build members
+2017-07-23 15:14:48 INFO -  - Build Enumeration
+2017-07-23 15:14:48 INFO -  - Build Class Constructor
+2017-07-23 15:14:48 INFO -  - BuildTableClass
+2017-07-23 15:14:48 INFO -  - Build members
+2017-07-23 15:14:48 INFO -  - Build Enumeration
+2017-07-23 15:14:48 INFO -  - Build Class Constructor
+2017-07-23 15:14:48 INFO -  - Build members
+2017-07-23 15:14:48 INFO -  - Build Enumeration
+2017-07-23 15:14:48 INFO -  - Build Class Constructor
+2017-07-23 15:14:48 INFO - Write Build Script : ..\Assets\Resources\DataTableR.cs
+2017-07-23 15:14:48 INFO - Build complete !!!!

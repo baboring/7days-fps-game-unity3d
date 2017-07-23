@@ -109,6 +109,21 @@ namespace SB {
 
 			return null;
 		}
+
+        // find spot in spawn spots
+        public Transform FindFurthestSpot(ObjectProperty obj) {
+            Vector3 longest = Vector3.zero;
+            Transform pick = null;
+            foreach (var t in spots) {
+                Vector3 v = obj.transform.DistanceFrom(t);
+                if(v.magnitude > longest.magnitude) {
+                    longest = v;
+                    pick = t;
+                }
+            }
+
+            return pick;
+        }
 		
 	}
 }

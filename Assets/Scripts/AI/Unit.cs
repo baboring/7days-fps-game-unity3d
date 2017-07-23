@@ -26,10 +26,6 @@ namespace SB {
 			Debug.Assert(null != property,"Unit's propery is null");
 			property.Reset();
 		}
-		// Update is called once per frame
-		void Update () {
-			
-		}
 		
 		public bool IsAlive { get {return property.isAlive;} }
 

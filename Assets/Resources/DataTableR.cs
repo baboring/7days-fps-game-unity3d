@@ -183,6 +183,7 @@ namespace SB {
 			public readonly float angularSpeed;
 			public readonly float walkSpeed;
 			public readonly float runSpeed;
+			public readonly float sprintSpeed;
 			public readonly float stoppingDist;
 			public readonly float acceleration;
 			public readonly float attack_power;
@@ -211,10 +212,11 @@ namespace SB {
 				this.angularSpeed = tContents[10];
 				this.walkSpeed = tContents[11];
 				this.runSpeed = tContents[12];
-				this.stoppingDist = tContents[13];
-				this.acceleration = tContents[14];
-				this.attack_power = tContents[15];
-				this.max_life = tContents[16];
+				this.sprintSpeed = tContents[13];
+				this.stoppingDist = tContents[14];
+				this.acceleration = tContents[15];
+				this.attack_power = tContents[16];
+				this.max_life = tContents[17];
 			}
 
 		}

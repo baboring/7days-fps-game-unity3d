@@ -44,12 +44,15 @@ namespace SB {
 							
 		}
 		protected bool IsMoving {
-			get { return agent && (!agent.isStopped && agent.hasPath);}
+			get { return agent && (agent.desiredVelocity.magnitude > 0);}
 		}
 		
 		protected void FixedUpdate () {
 			if(agent)
 				SetAnimationFloat("forward",agent.velocity.magnitude);
+			// basic hp regeneration
+			if(property.isAlive && property.life < property.tb.max_life)
+				property.life += Time.fixedDeltaTime * 0.1f;
 		}
 
 

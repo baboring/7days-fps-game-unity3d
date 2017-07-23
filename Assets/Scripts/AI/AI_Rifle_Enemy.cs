@@ -127,8 +127,10 @@ namespace SB {
 			public void Enter(Entity e) {
 				AIEntity entity = (AIEntity)e;
 				entity.target = null;
-			}
-			public void Exit(Entity e){}
+                // move fast
+                entity.Ai.agent.speed = entity.property.tb.walkSpeed;
+            }
+            public void Exit(Entity e){}
 			public void Execute(Entity e){
 				AIEntity entity = (AIEntity)e;
 
@@ -352,12 +354,35 @@ namespace SB {
 		// Runaway from target  
 		#region State RunAway ---------------
 		class StateRunaway : IState {
-			public void Enter(Entity e) {}
-			public void Exit(Entity e){}
-			public void Execute(Entity e){
+			public void Enter(Entity e) {
+                AIEntity entity = (AIEntity)e;
 
-			}
-		}
+                // avoid from target or own position
+                ObjectProperty scarer = (entity.target) ? entity.target : entity.property;
+                var found = SpawnManager.instance.FindFurthestSpot(scarer);
+                if (found)
+                    entity.Ai.agent.destination = found.transform.position;
+                // move fast
+                entity.Ai.agent.speed = entity.property.tb.sprintSpeed;
+                entity.target = null;
+
+            }
+            public void Exit(Entity e){
+                //AIEntity entity = (AIEntity)e;
+                //entity.Ai.agent.speed = entity.property.tb.walkSpeed;
+            }
+            public void Execute(Entity e){
+                AIEntity entity = (AIEntity)e;
+
+                // check point 1
+                {
+                    // check reach them and something
+                    if (!entity.Ai.IsMoving)
+                        entity.Event = eEntityState.Wander;
+                }
+
+            }
+        }
 		#endregion
 		
 
