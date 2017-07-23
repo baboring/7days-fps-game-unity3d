@@ -37,7 +37,7 @@ namespace SB {
 			agent.angularSpeed = property.angularSpeed;
 			agent.stoppingDistance = property.stoppingDist;
 			
-			Debug.Log("Enabled 0/"+ this.GetType().Name);
+			//Debug.Log("Enabled 0/"+ this.GetType().Name);
 							
 		}
 		protected bool IsStoped {
@@ -67,16 +67,16 @@ namespace SB {
 			Debug.Log("OnAnimationTrigger:" + arg);
 			switch(arg) {
 				case "enterDamage":
-					agent.Stop();
+					agent.isStopped = true;
 					break;
 				case "leaveDamage":
-					agent.Resume();
+					agent.isStopped = false;
 					break;
 				case "enterDie":
-					agent.Stop();
+					agent.isStopped = true;
 					break;
 				case "leaveDie":
-					this.property.ReturnToPool();
+					DisposeForPool();
 					break;
 			}
 		}
@@ -93,21 +93,39 @@ namespace SB {
 				animator.SetFloat(arg,val);
 		}
 
-		override public void OnDamage(ObjectProperty uInfo) {
+		float DamageCalculate(ObjectProperty attacker) {
+			return attacker.attack_power;
+		}
+
+		override public void OnDamage(ObjectProperty attacker) {
 
 			if(!IsAlive)
 				return;
 
-			Debug.Assert(null != uInfo,"Attacker is null");
+			Debug.Assert(null != attacker,"Attacker is null");
 
-			agent.velocity = (agent.velocity.magnitude / 2f) * agent.velocity.normalized;
-			property.life -= uInfo.attack_power;
+			// motion adjust
+			if(!agent.isStopped)
+				agent.velocity = (agent.velocity.magnitude / 2f) * agent.velocity.normalized;
 
-			if(IsAlive)
+			// demage calculate
+			float impactDamage = DamageCalculate(attacker);
+			property.life -= impactDamage;
+			// call die 
+			if(property.life <= 0) {
+				OnDie(attacker);
+			}
+			else 
 				SetAnimationTrigger("damaged");
-			else
-				SetAnimationTrigger("dying");
 		}
+		override public void OnDie(ObjectProperty attacker) {
+			Debug.Assert(IsAlive,"die again,this unit is already death");
+			Debug.Log("Die from " + ((null != attacker)?attacker.transform.gameObject.name : ""));
+			
+			SetAnimationTrigger("dying");
+			SpawnManager.instance.Remove(this.property);
+		}
+
 		
 	}
 }

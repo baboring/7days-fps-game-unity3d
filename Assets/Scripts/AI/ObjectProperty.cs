@@ -54,10 +54,10 @@ namespace SB {
 		// dynmic data
 		public float life = 10;
 
+		[System.NonSerialized]
+		public bool isAlive = true;
 
 		void Awake() {
-			if(null == R.instance)
-				R.Create();
 			// attach default owner
 			owner = this.GetComponent<Unit>();
 			Reset();
@@ -79,6 +79,7 @@ namespace SB {
 			stoppingDist = info.stoppingDist;
 
 			life = info.life;
+			isAlive = true;
 			
 			return true;
 		}

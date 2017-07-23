@@ -31,11 +31,20 @@ namespace SB {
 			
 		}
 		
-		public bool IsAlive { get {return (property.life > 0);} }
+		public bool IsAlive { get {return property.isAlive;} }
 		abstract public void OnDamage(ObjectProperty uInfo);
+		abstract public void OnDie(ObjectProperty uInfo);
 
 		void OnLevelWasLoaded () {
+			DisposeForPool();
+		}
+
+		public void DisposeForPool() {
+
+			// Just in case, remove this again from SpawnManager
+			SpawnManager.instance.Remove(property);
+			
 			property.ReturnToPool();
-		}	
+		}
 	}
 }

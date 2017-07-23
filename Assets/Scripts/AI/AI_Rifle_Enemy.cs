@@ -127,8 +127,7 @@ namespace SB {
 		protected void OnEnable()
 		{
 			base.OnEnable();
-			Debug.Log("Enabled 1/"+ this.GetType().Name);
-							
+			//Debug.Log("Enabled 1/"+ this.GetType().Name);
 		}
 		// Update is called once per frame
 		void Update () {

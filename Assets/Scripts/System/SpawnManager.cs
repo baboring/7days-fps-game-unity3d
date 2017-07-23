@@ -15,20 +15,60 @@ namespace SB {
 		Player = 0,
 		NonPlayer,
 		Item,
+		Max
 	}
 	public class SpawnManager : ManualSingletonMB<SpawnManager> {
+
+		public int MaxSpawnNum = 30;
+		public int SecondsForSpawn = 5;
 
 		public Transform[] spots;
 		public PooledObject[] objPrefabNPC;
 		public PooledObject[] objPrefabPlayer;
+
+		public List<ObjectProperty> All = new List<ObjectProperty>();
+
 		// Use this for initialization
 		void Awake() {
 			instance = this;
 		}
 		void Start() {
 			Debug.Log("SpawnManager initialized");
+			// gradually increse ememies.
+			InvokeRepeating("OnSpawnCheck", 2.0f, SecondsForSpawn);
 		}
-		public PooledObject RandomSpawn(eSpawn type) {
+
+		public void Remove(ObjectProperty obj) {
+			All.Remove(obj);
+		}
+
+		// gradually increse ememies.
+		void OnSpawnCheck() {
+			if(All.Count < MaxSpawnNum)
+				Spawn(eSpawn.NonPlayer);
+		}
+		// Update is called once per frame
+		void Update () {
+
+			// for dev log display
+			DevDisplay.instance.Watch["Spawns"] = All.Count.ToString(); 
+		}
+
+		// Spawn unit
+		PooledObject SpawnObject(PooledObject prefab, Vector3 pos) {
+			Debug.DrawRay(pos, Vector3.up, Color.blue, 5.0f);
+
+			PooledObject spawn = prefab.Instanciate<PooledObject>();
+			spawn.transform.position = pos;
+			spawn.transform.gameObject.SetActive(true);
+
+			// var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			// go.transform.position = pos;
+			return spawn;
+		}
+
+		// spawn randowm object in type
+		public PooledObject Spawn(eSpawn type) {
 			Vector3 point;
 			PooledObject[] objPrefab = null;
 			Transform[] posPrefab = null;
@@ -44,33 +84,19 @@ namespace SB {
 			}
 			int index = Random.Range(0, posPrefab.Length);
 
-			if (objPrefab != null && posPrefab != null && Facade_NavMesh.RandomRangePoint(posPrefab[index].position, 0, 10f, out point)) {
-				return SpawnObject(objPrefab[Random.Range(0, objPrefab.Length)],point);
+			if (objPrefab != null && posPrefab != null 
+				&& Facade_NavMesh.RandomRangePoint(posPrefab[index].position, 0, 10f, out point)) {
+				var objSpawn = SpawnObject(objPrefab[Random.Range(0, objPrefab.Length)],point);
+				// save for searching in AI
+				ObjectProperty property = objSpawn as ObjectProperty;
+				if(null != property) {
+					All.Add(property);
+				}
+				return objSpawn;
 			}
-			return default(PooledObject);
+
+			return null;
 		}
 		
-		// Update is called once per frame
-		void Update () {
-			if(Input.GetKeyDown(KeyCode.Tab)) {
-				Vector3 point;
-				int index = Random.Range(0, spots.Length);
-				if (Facade_NavMesh.RandomRangePoint(spots[index].position, 0, 10f, out point)) {
-					SpawnObject(objPrefabNPC[Random.Range(0, objPrefabNPC.Length)],point);
-				}
-			}
-		}
-
-		PooledObject SpawnObject(PooledObject prefab, Vector3 pos) {
-			Debug.DrawRay(pos, Vector3.up, Color.blue, 5.0f);
-
-			PooledObject spawn = prefab.Instanciate<PooledObject>();
-			spawn.transform.position = pos;
-			spawn.transform.gameObject.SetActive(true);
-
-			// var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			// go.transform.position = pos;
-			return spawn;
-		}
 	}
 }

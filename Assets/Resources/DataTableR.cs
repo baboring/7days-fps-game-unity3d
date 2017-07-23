@@ -12,7 +12,7 @@ namespace SB {
 	public class R {
 
 		private static R _instance;
-		public static R instance { get {return _instance;} }
+		public static R instance { get { if(null==_instance) Create(); return _instance;} }
 		public R() {
 			Assert = assert_;
 		}
@@ -38,51 +38,21 @@ namespace SB {
 					if (mapCSVTable.TryGetValue("PropertyInfo", out table)) {
 						var dic = this._data_PropertyInfo = new Dictionary<PropertyInfo.eID, R.PropertyInfo>();
 						foreach (var rec in table.tRecords) {
-							R.PropertyInfo newOne = new R.PropertyInfo() {
-								id = rec.tContents[0].ToEnum<PropertyInfo.eID>(),
-								sightRange = rec.tContents[1],
-								stepAngle = rec.tContents[2],
-								eyeLevel = rec.tContents[3],
-								wander_min_range = rec.tContents[4],
-								wander_max_range = rec.tContents[5],
-								angularSpeed = rec.tContents[6],
-								walkSpeed = rec.tContents[7],
-								runSpeed = rec.tContents[8],
-								stoppingDist = rec.tContents[9],
-								acceleration = rec.tContents[10],
-								attack_power = rec.tContents[11],
-								life = rec.tContents[12],
-							};
+							R.PropertyInfo newOne = new R.PropertyInfo(rec.tContents);
 							dic.Add(newOne.id, newOne);
 						}
 					}
 					if (mapCSVTable.TryGetValue("Speeches", out table)) {
 						var dic = this._data_Speeches = new Dictionary<Speeches.eKey, R.Speeches>();
 						foreach (var rec in table.tRecords) {
-							R.Speeches newOne = new R.Speeches() {
-								id = rec.tContents[0].ToEnum<Speeches.eKey>(),
-								StrValue = rec.tContents[1],
-								Search = rec.tContents[2],
-								StrHelp = rec.tContents[3],
-								StrMotion = rec.tContents[4],
-								json = rec.tContents[5],
-							};
+							R.Speeches newOne = new R.Speeches(rec.tContents);
 							dic.Add(newOne.id, newOne);
 						}
 					}
 					if (mapCSVTable.TryGetValue("Seq", out table)) {
 						var dic = this._data_Seq = new Dictionary<Seq.eState, R.Seq>();
 						foreach (var rec in table.tRecords) {
-							R.Seq newOne = new R.Seq() {
-								state = rec.tContents[0].ToEnum<Seq.eState>(),
-								speak = rec.tContents[1],
-								lookat = rec.tContents[2],
-								cases = rec.tContents[3],
-								condition = rec.tContents[4],
-								cond_set = rec.tContents[5],
-								elseCase = rec.tContents[6],
-								next = rec.tContents[7].ToEnum<Seq.eState>(),
-							};
+							R.Seq newOne = new R.Seq(rec.tContents);
 							dic.Add(newOne.state, newOne);
 						}
 					}
@@ -98,20 +68,14 @@ namespace SB {
 					if (mapCSVTable.TryGetValue("Secure", out table)) {
 						var dic = this._data_Secure = new Dictionary<Secure.eKey, R.Secure>();
 						foreach (var rec in table.tRecords) {
-							R.Secure newOne = new R.Secure() {
-								id = rec.tContents[0].ToEnum<Secure.eKey>(),
-								Text = rec.tContents[1],
-							};
+							R.Secure newOne = new R.Secure(rec.tContents);
 							dic.Add(newOne.id, newOne);
 						}
 					}
 					if (mapCSVTable.TryGetValue("illegalApp", out table)) {
 						var dic = this._data_illegalApp = new Dictionary<string, R.illegalApp>();
 						foreach (var rec in table.tRecords) {
-							R.illegalApp newOne = new R.illegalApp() {
-								Text = rec.tContents[0],
-								id = rec.tContents[1],
-							};
+							R.illegalApp newOne = new R.illegalApp(rec.tContents);
 							dic.Add(newOne.Text, newOne);
 						}
 					}
@@ -127,23 +91,14 @@ namespace SB {
 					if (mapCSVTable.TryGetValue("DefaultValue", out table)) {
 						var dic = this._data_DefaultValue = new Dictionary<int, R.DefaultValue>();
 						foreach (var rec in table.tRecords) {
-							R.DefaultValue newOne = new R.DefaultValue() {
-								IDX = rec.tContents[0],
-								id = rec.tContents[1].ToEnum<DefaultValue.eKey>(),
-								Value = rec.tContents[2],
-								StrValue = rec.tContents[3],
-							};
+							R.DefaultValue newOne = new R.DefaultValue(rec.tContents);
 							dic.Add(newOne.IDX, newOne);
 						}
 					}
 					if (mapCSVTable.TryGetValue("TestEnumTable", out table)) {
 						var dic = this._data_TestEnumTable = new Dictionary<TestEnumTable.eID, R.TestEnumTable>();
 						foreach (var rec in table.tRecords) {
-							R.TestEnumTable newOne = new R.TestEnumTable() {
-								id = rec.tContents[0].ToEnum<TestEnumTable.eID>(),
-								Value = rec.tContents[1],
-								StrValue = rec.tContents[2],
-							};
+							R.TestEnumTable newOne = new R.TestEnumTable(rec.tContents);
 							dic.Add(newOne.id, newOne);
 						}
 					}
@@ -188,7 +143,7 @@ namespace SB {
 		private AssertFunc Assert		{ get; set; }
 		// -----------------------------------------------
 		public static PropertyInfo GetPropertyInfo(PropertyInfo.eID key) {
-			if (_instance._data_PropertyInfo.ContainsKey(key))
+			if (instance._data_PropertyInfo.ContainsKey(key))
 				return _instance._data_PropertyInfo[key];
 			return null;
 		}
@@ -196,7 +151,7 @@ namespace SB {
 			return (_instance._data_PropertyInfo.TryGetValue(key, out val));
 		}
 		public static Speeches GetSpeeches(Speeches.eKey key) {
-			if (_instance._data_Speeches.ContainsKey(key))
+			if (instance._data_Speeches.ContainsKey(key))
 				return _instance._data_Speeches[key];
 			return null;
 		}
@@ -204,7 +159,7 @@ namespace SB {
 			return (_instance._data_Speeches.TryGetValue(key, out val));
 		}
 		public static Seq GetSeq(Seq.eState key) {
-			if (_instance._data_Seq.ContainsKey(key))
+			if (instance._data_Seq.ContainsKey(key))
 				return _instance._data_Seq[key];
 			return null;
 		}
@@ -212,22 +167,22 @@ namespace SB {
 			return (_instance._data_Seq.TryGetValue(key, out val));
 		}
 
-		/// PropertyTable
+		/// PropertyTable - class declearation
 		public class PropertyInfo {
 
-			public eID id;
-			public float sightRange;
-			public float stepAngle;
-			public float eyeLevel;
-			public float wander_min_range;
-			public float wander_max_range;
-			public float angularSpeed;
-			public float walkSpeed;
-			public float runSpeed;
-			public float stoppingDist;
-			public float acceleration;
-			public float attack_power;
-			public float life;
+			public readonly eID id;
+			public readonly float sightRange;
+			public readonly float stepAngle;
+			public readonly float eyeLevel;
+			public readonly float wander_min_range;
+			public readonly float wander_max_range;
+			public readonly float angularSpeed;
+			public readonly float walkSpeed;
+			public readonly float runSpeed;
+			public readonly float stoppingDist;
+			public readonly float acceleration;
+			public readonly float attack_power;
+			public readonly float life;
 
 			public enum eID : int {
 				None,
@@ -238,16 +193,32 @@ namespace SB {
 			}
 
 
+			public PropertyInfo (List<CSV.varient> tContents) {
+				this.id = tContents[0].ToEnum<PropertyInfo.eID>();
+				this.sightRange = tContents[1];
+				this.stepAngle = tContents[2];
+				this.eyeLevel = tContents[3];
+				this.wander_min_range = tContents[4];
+				this.wander_max_range = tContents[5];
+				this.angularSpeed = tContents[6];
+				this.walkSpeed = tContents[7];
+				this.runSpeed = tContents[8];
+				this.stoppingDist = tContents[9];
+				this.acceleration = tContents[10];
+				this.attack_power = tContents[11];
+				this.life = tContents[12];
+			}
+
 		}
 
 		public class Speeches {
 
-			public eKey id;
-			public string StrValue;
-			public string Search;
-			public string StrHelp;
-			public string StrMotion;
-			public string json;
+			public readonly eKey id;
+			public readonly string StrValue;
+			public readonly string Search;
+			public readonly string StrHelp;
+			public readonly string StrMotion;
+			public readonly string json;
 
 			public enum eKey : int {
 				Welcome,
@@ -263,18 +234,27 @@ namespace SB {
 			}
 
 
+			public Speeches (List<CSV.varient> tContents) {
+				this.id = tContents[0].ToEnum<Speeches.eKey>();
+				this.StrValue = tContents[1];
+				this.Search = tContents[2];
+				this.StrHelp = tContents[3];
+				this.StrMotion = tContents[4];
+				this.json = tContents[5];
+			}
+
 		}
 
 		public class Seq {
 
-			public eState state;
-			public string speak;
-			public string lookat;
-			public string cases;
-			public string condition;
-			public string cond_set;
-			public string elseCase;
-			public Seq.eState next;
+			public readonly eState state;
+			public readonly string speak;
+			public readonly string lookat;
+			public readonly string cases;
+			public readonly string condition;
+			public readonly string cond_set;
+			public readonly string elseCase;
+			public readonly Seq.eState next;
 
 			public enum eState : int {
 				Sleep,
@@ -288,6 +268,17 @@ namespace SB {
 				CallupEmergency,
 			}
 
+
+			public Seq (List<CSV.varient> tContents) {
+				this.state = tContents[0].ToEnum<Seq.eState>();
+				this.speak = tContents[1];
+				this.lookat = tContents[2];
+				this.cases = tContents[3];
+				this.condition = tContents[4];
+				this.cond_set = tContents[5];
+				this.elseCase = tContents[6];
+				this.next = tContents[7].ToEnum<Seq.eState>();
+			}
 
 		}
 
@@ -308,7 +299,7 @@ namespace SB {
 
 		// -----------------------------------------------
 		public static Secure GetSecure(Secure.eKey key) {
-			if (_instance._data_Secure.ContainsKey(key))
+			if (instance._data_Secure.ContainsKey(key))
 				return _instance._data_Secure[key];
 			return null;
 		}
@@ -316,7 +307,7 @@ namespace SB {
 			return (_instance._data_Secure.TryGetValue(key, out val));
 		}
 		public static illegalApp GetillegalApp(string key) {
-			if (_instance._data_illegalApp.ContainsKey(key))
+			if (instance._data_illegalApp.ContainsKey(key))
 				return _instance._data_illegalApp[key];
 			return null;
 		}
@@ -324,23 +315,33 @@ namespace SB {
 			return (_instance._data_illegalApp.TryGetValue(key, out val));
 		}
 
-		/// SecureInfo
+		/// SecureInfo - class declearation
 		public class Secure {
 
-			public eKey id;
-			public string Text;
+			public readonly eKey id;
+			public readonly string Text;
 
 			public enum eKey : int {
 				SignatureHash,
 			}
 
 
+			public Secure (List<CSV.varient> tContents) {
+				this.id = tContents[0].ToEnum<Secure.eKey>();
+				this.Text = tContents[1];
+			}
+
 		}
 
 		public class illegalApp {
 
-			public string Text;
-			public int id;
+			public readonly string Text;
+			public readonly int id;
+
+			public illegalApp (List<CSV.varient> tContents) {
+				this.Text = tContents[0];
+				this.id = tContents[1];
+			}
 
 		}
 
@@ -357,7 +358,7 @@ namespace SB {
 
 		// -----------------------------------------------
 		public static DefaultValue GetDefaultValue(int key) {
-			if (_instance._data_DefaultValue.ContainsKey(key))
+			if (instance._data_DefaultValue.ContainsKey(key))
 				return _instance._data_DefaultValue[key];
 			return null;
 		}
@@ -365,7 +366,7 @@ namespace SB {
 			return (_instance._data_DefaultValue.TryGetValue(key, out val));
 		}
 		public static TestEnumTable GetTestEnumTable(TestEnumTable.eID key) {
-			if (_instance._data_TestEnumTable.ContainsKey(key))
+			if (instance._data_TestEnumTable.ContainsKey(key))
 				return _instance._data_TestEnumTable[key];
 			return null;
 		}
@@ -373,13 +374,13 @@ namespace SB {
 			return (_instance._data_TestEnumTable.TryGetValue(key, out val));
 		}
 
-		/// ConstantTable
+		/// ConstantTable - class declearation
 		public class DefaultValue {
 
-			public int IDX;
-			public eKey id;
-			public int Value;
-			public string StrValue;
+			public readonly int IDX;
+			public readonly eKey id;
+			public readonly int Value;
+			public readonly string StrValue;
 
 			public enum eKey : int {
 				DEFAULT_HELPER_COOLTIME = 1,
@@ -541,13 +542,20 @@ namespace SB {
 				public const int SKIN_RESET_STAT_DIA = 77;
 			}
 
+			public DefaultValue (List<CSV.varient> tContents) {
+				this.IDX = tContents[0];
+				this.id = tContents[1].ToEnum<DefaultValue.eKey>();
+				this.Value = tContents[2];
+				this.StrValue = tContents[3];
+			}
+
 		}
 
 		public class TestEnumTable {
 
-			public eID id;
-			public int Value;
-			public string StrValue;
+			public readonly eID id;
+			public readonly int Value;
+			public readonly string StrValue;
 
 			public enum eID : int {
 				PLAYER_DEFAULT_ATTACK_SPEED,
@@ -573,6 +581,12 @@ namespace SB {
 				CRITICAL_DAMAGE_RATIO,
 			}
 
+
+			public TestEnumTable (List<CSV.varient> tContents) {
+				this.id = tContents[0].ToEnum<TestEnumTable.eID>();
+				this.Value = tContents[1];
+				this.StrValue = tContents[2];
+			}
 
 		}
 
