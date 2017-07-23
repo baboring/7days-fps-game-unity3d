@@ -65,11 +65,11 @@ namespace SB {
 				// check target
 				if(entity.target == null) {
 					// check point 1
-					if(Facade_AI.DetectTarget(entity.property, out entity.target)) {
+					if(Facade_AI.DetectTarget(entity.property, entity.property.tb.sightRange, out entity.target)) {
 						Debug.Log("- Detect palyer!!");
 						// check distance for attacking or  
 						Vector3 distance = entity.target.transform.position - entity.property.transform.position;
-						if(distance.magnitude < entity.property.info.attackRange)
+						if(distance.magnitude < entity.property.tb.attackRange)
 							entity.Event = eState.Attack;
 						else
 							entity.Event = eState.Chase;
@@ -80,8 +80,8 @@ namespace SB {
 
 						if(Facade_NavMesh.RandomRangePoint(
 							entity.property.transform.position, 
-							entity.property.info.wander_min_range,
-							entity.property.info.wander_max_range, out entity.destPos)) {
+							entity.property.tb.wander_min_range,
+							entity.property.tb.wander_max_range, out entity.destPos)) {
 							entity.Ai.agent.destination = entity.destPos;
 						}
 					}
@@ -103,14 +103,14 @@ namespace SB {
 		class StateChase : IState {
 			public void Enter(Entity e) {
 				AIEntity entity = (AIEntity)e;
-				entity.Ai.agent.speed = entity.property.info.runSpeed;
+				entity.Ai.agent.speed = entity.property.tb.runSpeed;
 				if(entity.target != null) {
 					entity.Ai.agent.destination = entity.target.transform.position;
 				}
 			}
 			public void Exit(Entity e){
 				AIEntity entity = (AIEntity)e;
-				entity.Ai.agent.speed = entity.property.info.walkSpeed;
+				entity.Ai.agent.speed = entity.property.tb.walkSpeed;
 			}
 			public void Execute(Entity e){
 				AIEntity entity = (AIEntity)e;

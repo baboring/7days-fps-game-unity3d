@@ -35,10 +35,6 @@ namespace SB {
 		abstract public void OnDamage(ObjectProperty uInfo);
 		abstract public void OnDie(ObjectProperty uInfo);
 
-		void OnLevelWasLoaded () {
-			DisposeForPool();
-		}
-
 		public void DisposeForPool() {
 
 			// Just in case, remove this again from SpawnManager

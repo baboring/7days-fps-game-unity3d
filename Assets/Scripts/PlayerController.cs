@@ -52,15 +52,15 @@ namespace SB {
 				moveDirection = eyesTransform.forward * Input.GetAxis("Vertical");
 	//			moveDirection +=  Vector3.Cross(eyesTransform.up, eyesTransform.forward).normalized * Input.GetAxis("Horizontal");
 				moveDirection +=  eyesTransform.right * Input.GetAxis("Horizontal");
-				animator.SetFloat("horz",Input.GetAxis("Horizontal") * ((IsSprnit)? unitInfo.info.runSpeed : unitInfo.info.walkSpeed));
-				animator.SetFloat("vert",Input.GetAxis("Vertical") * ((IsSprnit)? unitInfo.info.runSpeed : unitInfo.info.walkSpeed));
+				animator.SetFloat("horz",Input.GetAxis("Horizontal") * ((IsSprnit)? unitInfo.tb.runSpeed : unitInfo.tb.walkSpeed));
+				animator.SetFloat("vert",Input.GetAxis("Vertical") * ((IsSprnit)? unitInfo.tb.runSpeed : unitInfo.tb.walkSpeed));
 			}
 			else {
 				// look back view
 				moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 				moveDirection = transform.TransformDirection(moveDirection);
-				animator.SetFloat("horz",moveDirection.x * unitInfo.info.walkSpeed);
-				animator.SetFloat("vert",moveDirection.z * ((IsSprnit)? unitInfo.info.runSpeed : unitInfo.info.walkSpeed));
+				animator.SetFloat("horz",moveDirection.x * unitInfo.tb.walkSpeed);
+				animator.SetFloat("vert",moveDirection.z * ((IsSprnit)? unitInfo.tb.runSpeed : unitInfo.tb.walkSpeed));
 			}
 
 			if (controller.isGrounded && Input.GetButton("Jump")) {
@@ -91,8 +91,8 @@ namespace SB {
 			Physics.SphereCast(transform.position, controller.radius, Vector3.down, out hitInfo,
 								controller.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
 			Vector3 move = Vector3.ProjectOnPlane(moveDirection, hitInfo.normal).normalized;
-			moveDirection.x = move.x *  ((IsSprnit)? unitInfo.info.runSpeed : unitInfo.info.walkSpeed);
-			moveDirection.z = move.z *  ((IsSprnit)? unitInfo.info.runSpeed : unitInfo.info.walkSpeed);
+			moveDirection.x = move.x *  ((IsSprnit)? unitInfo.tb.runSpeed : unitInfo.tb.walkSpeed);
+			moveDirection.z = move.z *  ((IsSprnit)? unitInfo.tb.runSpeed : unitInfo.tb.walkSpeed);
 			
 			if (controller.isGrounded) {
 

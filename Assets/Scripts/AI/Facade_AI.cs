@@ -15,12 +15,12 @@ namespace SB {
         static bool debug_on = false;
 
         // detecting target
-        static public bool DetectTarget(ObjectProperty property, out ObjectProperty target ) {
+        static public bool DetectTarget(ObjectProperty property,float range, out ObjectProperty target ) {
 
             Debug.Assert(property != null,"owener property is null");
             target = null;
             Quaternion startingAngle = Quaternion.AngleAxis(-60, Vector3.up);
-            Quaternion stepAngle = Quaternion.AngleAxis(property.info.stepAngle, Vector3.up);
+            Quaternion stepAngle = Quaternion.AngleAxis(property.tb.stepAngle, Vector3.up);
 
 
             RaycastHit hit;
@@ -29,11 +29,11 @@ namespace SB {
             var direction = angle * Vector3.forward;
 
             // adjust height for eyes level
-            pos.y += property.info.eyeLevel;
+            pos.y += property.tb.eyeLevel;
 
             for (var i = 0; i < 24; i++)
             {
-                if (Physics.Raycast(pos, direction, out hit, property.info.sightRange))
+                if (Physics.Raycast(pos, direction, out hit, range))
                 {
                     if(debug_on)
                         Debug.DrawRay(pos, direction * hit.distance, Color.green);
@@ -46,7 +46,7 @@ namespace SB {
                 }
                 else 
                     if(debug_on)
-                        Debug.DrawRay(pos, direction * property.info.sightRange, Color.green);
+                        Debug.DrawRay(pos, direction * property.tb.sightRange, Color.green);
                 
                 direction = stepAngle * direction;
             }

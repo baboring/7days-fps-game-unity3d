@@ -35,7 +35,7 @@ namespace SB {
 		public ObjectType type;
 
 		// maguring values
-		public R.PropertyInfo info { get; private set;}
+		public R.PropertyInfo tb { get; private set;}
 
 		// dynmic data
 		public float life = 10;
@@ -51,12 +51,12 @@ namespace SB {
 
 		public bool Reset() {
 			//Debug.Log("Property Reset - " + tableId);
-			var info = R.GetPropertyInfo(tableId);
-			Debug.Assert(null != info,"Not exist table id : "+tableId);
-			this.info = info;
+			var tb = R.GetPropertyInfo(tableId);
+			Debug.Assert(null != tb,"Not exist table id : "+tableId);
+			this.tb = tb;
 
 			// variable reset
-			life = info.life;
+			life = tb.life;
 			isAlive = true;
 			
 			return true;

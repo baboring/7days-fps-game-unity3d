@@ -33,9 +33,9 @@ namespace SB {
 			animator.SetTrigger("Reset");
 
 			// default speed
-			agent.speed = property.info.walkSpeed;
-			agent.angularSpeed = property.info.angularSpeed;
-			agent.stoppingDistance = property.info.stoppingDist;
+			agent.speed = property.tb.walkSpeed;
+			agent.angularSpeed = property.tb.angularSpeed;
+			agent.stoppingDistance = property.tb.stoppingDist;
 			
 			//Debug.Log("Enabled 0/"+ this.GetType().Name);
 							
@@ -94,7 +94,7 @@ namespace SB {
 		}
 
 		float DamageCalculate(ObjectProperty attacker) {
-			return attacker.info.attack_power;
+			return attacker.tb.attack_power;
 		}
 
 		override public void OnDamage(ObjectProperty attacker) {
