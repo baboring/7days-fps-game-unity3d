@@ -1,23 +1,23 @@
 ------------------ Log start ------------------
-2017-07-22 19:48:51 INFO - Read From Excel D:\Workspace\_Unity\FPS Test Project\TableBuilder\xlsx_Data/SecureInfo.xlsx
-2017-07-22 19:48:52 INFO - Total Sheets 2
-2017-07-22 19:48:52 INFO - Read Sheet 'Secure'
-2017-07-22 19:48:52 INFO - Read Sheet 'illegalApp'
-2017-07-22 19:48:53 INFO - Write CSV : SecureInfo
-2017-07-22 19:48:53 INFO - Write File : ./csv_Data/SecureInfo.csv
-2017-07-22 19:48:53 INFO - Write File : ../Assets/Resources/csv_Data\SecureInfo.csv
-2017-07-22 19:48:53 INFO - Read From Excel D:\Workspace\_Unity\FPS Test Project\TableBuilder\xlsx_Data/PropertyTable.xlsx
-2017-07-22 19:48:53 INFO - Total Sheets 3
-2017-07-22 19:48:53 INFO - Read Sheet 'PropertyInfo'
-2017-07-22 19:48:54 INFO - Read Sheet 'Speeches'
-2017-07-22 19:48:54 INFO - Read Sheet 'Seq'
-2017-07-22 19:48:54 INFO - Write CSV : PropertyTable
-2017-07-22 19:48:54 INFO - Write File : ./csv_Data/PropertyTable.csv
-2017-07-22 19:48:54 INFO - Write File : ../Assets/Resources/csv_Data\PropertyTable.csv
-2017-07-22 19:48:54 INFO - Read From Excel D:\Workspace\_Unity\FPS Test Project\TableBuilder\xlsx_Data/ConstantTable.xlsx
-2017-07-22 19:48:55 INFO - Total Sheets 2
-2017-07-22 19:48:55 INFO - Read Sheet 'DefaultValue'
-2017-07-22 19:48:55 INFO - Read Sheet 'TestEnumTable'
-2017-07-22 19:48:56 INFO - Write CSV : ConstantTable
-2017-07-22 19:48:56 INFO - Write File : ./csv_Data/ConstantTable.csv
-2017-07-22 19:48:56 INFO - Write File : ../Assets/Resources/csv_Data\ConstantTable.csv
+2017-07-23 00:47:02 INFO - Read From Excel D:\Workspace\_Unity\FPS Test Project\TableBuilder\xlsx_Data/SecureInfo.xlsx
+2017-07-23 00:47:02 INFO - Total Sheets 2
+2017-07-23 00:47:02 INFO - Read Sheet 'Secure'
+2017-07-23 00:47:02 INFO - Read Sheet 'illegalApp'
+2017-07-23 00:47:03 INFO - Write CSV : SecureInfo
+2017-07-23 00:47:03 INFO - Write File : ./csv_Data/SecureInfo.csv
+2017-07-23 00:47:03 INFO - Write File : ../Assets/Resources/csv_Data\SecureInfo.csv
+2017-07-23 00:47:03 INFO - Read From Excel D:\Workspace\_Unity\FPS Test Project\TableBuilder\xlsx_Data/PropertyTable.xlsx
+2017-07-23 00:47:04 INFO - Total Sheets 3
+2017-07-23 00:47:04 INFO - Read Sheet 'PropertyInfo'
+2017-07-23 00:47:04 INFO - Read Sheet 'Speeches'
+2017-07-23 00:47:04 INFO - Read Sheet 'Seq'
+2017-07-23 00:47:05 INFO - Write CSV : PropertyTable
+2017-07-23 00:47:05 INFO - Write File : ./csv_Data/PropertyTable.csv
+2017-07-23 00:47:05 INFO - Write File : ../Assets/Resources/csv_Data\PropertyTable.csv
+2017-07-23 00:47:05 INFO - Read From Excel D:\Workspace\_Unity\FPS Test Project\TableBuilder\xlsx_Data/ConstantTable.xlsx
+2017-07-23 00:47:05 INFO - Total Sheets 2
+2017-07-23 00:47:05 INFO - Read Sheet 'DefaultValue'
+2017-07-23 00:47:06 INFO - Read Sheet 'TestEnumTable'
+2017-07-23 00:47:06 INFO - Write CSV : ConstantTable
+2017-07-23 00:47:06 INFO - Write File : ./csv_Data/ConstantTable.csv
+2017-07-23 00:47:06 INFO - Write File : ../Assets/Resources/csv_Data\ConstantTable.csv

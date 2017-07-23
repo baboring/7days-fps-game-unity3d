@@ -15,7 +15,7 @@ namespace SB {
 
 
 	public class AI_Rifle_Enemy : AI_Unit {
-		AIEntity _aiEntity;
+		AIEntity _aiEntity = new AIEntity();
 
 		// definition state
 		enum eState {
@@ -27,12 +27,13 @@ namespace SB {
 		}
 
 		class AIEntity : Entity {
-			public AI_Rifle_Enemy owner;
+			public AI_Rifle_Enemy Ai;
+			public ObjectProperty property;
 			public ObjectProperty target;
-			
+			public Vector3 destPos = Vector3.zero;
+
 			class FSM : StateTransitionTable {}
-			public AIEntity(AI_Rifle_Enemy owner) {
-				this.owner = owner;
+			public AIEntity() {
 				transitionTable = new FSM();
 				transitionTable.SetState(eState.Wander,new WanderState());
 				transitionTable.SetState(eState.Search,new StateSearch());
@@ -41,35 +42,50 @@ namespace SB {
 				transitionTable.SetState(eState.Attack,new StateAttack());
 			}
 
+			public void Reset(AI_Rifle_Enemy Ai) {
+				this.Ai = Ai;
+				this.property = Ai.property;
+				this.target = null;
+				this.destPos = Vector3.zero;
+			}
+
 		}
 
+		// Wander around
 		class WanderState : IState {
 
-			Vector3 dest = Vector3.zero;
 			public void Enter(Entity e) {
-				AIEntity data = (AIEntity)e;
-				data.target = null;
+				AIEntity entity = (AIEntity)e;
+				entity.target = null;
 			}
 			public void Exit(Entity e){}
 			public void Execute(Entity e){
-				AIEntity data = (AIEntity)e;
-				if(data.target == null) {
-					if(Facade_AI.DetectTarget(data.owner.property, out data.target)) {
-						data.Event = eState.Chase;
+				AIEntity entity = (AIEntity)e;
+
+				// check target
+				if(entity.target == null) {
+					// check point 1
+					if(Facade_AI.DetectTarget(entity.property, out entity.target)) {
+						Debug.Log("- Detect palyer!!");
+						// check distance for attacking or  
+						Vector3 distance = entity.target.transform.position - entity.property.transform.position;
+						if(distance.magnitude < entity.property.info.attackRange)
+							entity.Event = eState.Attack;
+						else
+							entity.Event = eState.Chase;
+						return;
 					}
-					else if(data.owner.IsStoped) {
+					// check point 2
+					else if(entity.Ai.IsStoped) {
 
 						if(Facade_NavMesh.RandomRangePoint(
-							data.owner.transform.position, 
-							data.owner.property.wander_min_range,
-							data.owner.property.wander_max_range, out dest)) {
-							data.owner.agent.destination = dest;
+							entity.property.transform.position, 
+							entity.property.info.wander_min_range,
+							entity.property.info.wander_max_range, out entity.destPos)) {
+							entity.Ai.agent.destination = entity.destPos;
 						}
 					}
 				}
-
-				Debug.DrawRay(data.owner.transform.position, dest - data.owner.transform.position, Color.green);
-
 			}
 		}
 		class StateSearch : IState {
@@ -77,25 +93,31 @@ namespace SB {
 			public void Enter(Entity e) {}
 			public void Exit(Entity e){}
 			public void Execute(Entity e){
-				AIEntity data = (AIEntity)e;
+				AIEntity entity = (AIEntity)e;
 
-				data.Event = eState.Wander;
+				entity.Event = eState.Wander;
 			}
 		}
+
+		// Chasing target
 		class StateChase : IState {
 			public void Enter(Entity e) {
-				AIEntity data = (AIEntity)e;
-				if(data.target != null) {
-					data.owner.agent.destination = data.target.transform.position;
+				AIEntity entity = (AIEntity)e;
+				entity.Ai.agent.speed = entity.property.info.runSpeed;
+				if(entity.target != null) {
+					entity.Ai.agent.destination = entity.target.transform.position;
 				}
 			}
-			public void Exit(Entity e){}
+			public void Exit(Entity e){
+				AIEntity entity = (AIEntity)e;
+				entity.Ai.agent.speed = entity.property.info.walkSpeed;
+			}
 			public void Execute(Entity e){
-				AIEntity data = (AIEntity)e;
+				AIEntity entity = (AIEntity)e;
 
 				// check reach them and something
-				if(data.owner.IsStoped)
-					data.Event = eState.Search;
+				if(entity.Ai.IsStoped)
+					entity.Event = eState.Search;
 			}
 		}
 
@@ -114,11 +136,6 @@ namespace SB {
 			}
 		}
 
-		AI_Rifle_Enemy() {
-			_aiEntity = new AIEntity(this);
-			_aiEntity.Event = eState.Wander;
-		}
-
 		// Use this for initialization
 		protected void Awake () {
 			base.Awake();
@@ -127,13 +144,19 @@ namespace SB {
 		protected void OnEnable()
 		{
 			base.OnEnable();
+			_aiEntity.Reset(this);
+			_aiEntity.Event = eState.Wander;
 			//Debug.Log("Enabled 1/"+ this.GetType().Name);
 		}
 		// Update is called once per frame
 		void Update () {
 
-			if(IsAlive)
+			if(IsAlive && _aiEntity.Ai) {
 				_aiEntity.UpdateState();
+				if(_aiEntity.destPos != Vector3.zero)
+					Debug.DrawRay(_aiEntity.property.transform.position, _aiEntity.destPos - _aiEntity.property.transform.position, Color.green);
+				
+			}
 		}
 
 		override public void OnDamage(ObjectProperty uInfo) {

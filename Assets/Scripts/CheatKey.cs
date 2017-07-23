@@ -15,6 +15,7 @@ public class CheatKey : ManualSingletonMB<CheatKey> {
 
 	// cheat on/off
 	public bool isCheatOn = false;
+	public bool isDebugMode = false;
 	// Use this for initialization
 	void Start () {
 		instance = this;

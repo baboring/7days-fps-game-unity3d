@@ -15,38 +15,38 @@ namespace SB {
         static bool debug_on = false;
 
         // detecting target
-        static public bool DetectTarget(ObjectProperty owner, out ObjectProperty target ) {
+        static public bool DetectTarget(ObjectProperty property, out ObjectProperty target ) {
 
-            Debug.Assert(owner != null,"unit owener is null");
+            Debug.Assert(property != null,"owener property is null");
             target = null;
             Quaternion startingAngle = Quaternion.AngleAxis(-60, Vector3.up);
-            Quaternion stepAngle = Quaternion.AngleAxis(owner.stepAngle, Vector3.up);
+            Quaternion stepAngle = Quaternion.AngleAxis(property.info.stepAngle, Vector3.up);
 
 
             RaycastHit hit;
-            var angle = owner.transform.rotation * startingAngle;
+            var angle = property.transform.rotation * startingAngle;
+            var pos = property.transform.position;
             var direction = angle * Vector3.forward;
-            var pos = owner.transform.position;
 
-            pos.y += owner.eyeLevel;
+            // adjust height for eyes level
+            pos.y += property.info.eyeLevel;
 
             for (var i = 0; i < 24; i++)
             {
-                
-                if (Physics.Raycast(pos, direction, out hit, owner.sightRange))
+                if (Physics.Raycast(pos, direction, out hit, property.info.sightRange))
                 {
                     if(debug_on)
                         Debug.DrawRay(pos, direction * hit.distance, Color.green);
                     var unit_info = hit.collider.GetComponent<ObjectProperty>();
-                    if (unit_info && unit_info.ally != owner.ally) {
+                    if (unit_info && unit_info.ally != property.ally) {
                         //Enemy was seen
-                        Debug.Log("Find taret:" + unit_info.gameObject.name);
+                        Debug.Log("- Found out taret:" + unit_info.gameObject.name);
                         target = unit_info;
                     }
                 }
                 else 
                     if(debug_on)
-                        Debug.DrawRay(pos, direction * owner.sightRange, Color.green);
+                        Debug.DrawRay(pos, direction * property.info.sightRange, Color.green);
                 
                 direction = stepAngle * direction;
             }

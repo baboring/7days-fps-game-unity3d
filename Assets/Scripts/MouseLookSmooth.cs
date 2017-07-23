@@ -73,7 +73,7 @@ public class MouseLookSmooth : MonoBehaviour {
 		if(Input.GetKeyUp(KeyCode.Escape)) {
 			m_cursorIsLocked = false;
 		}
-		else if(Input.GetMouseButtonUp(0)) {
+		else if(Input.GetMouseButtonUp(0)||Input.GetMouseButtonUp(1)) {
 			m_cursorIsLocked = true;
 		}
 

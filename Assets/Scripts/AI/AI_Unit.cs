@@ -33,9 +33,9 @@ namespace SB {
 			animator.SetTrigger("Reset");
 
 			// default speed
-			agent.speed = property.walkSpeed;
-			agent.angularSpeed = property.angularSpeed;
-			agent.stoppingDistance = property.stoppingDist;
+			agent.speed = property.info.walkSpeed;
+			agent.angularSpeed = property.info.angularSpeed;
+			agent.stoppingDistance = property.info.stoppingDist;
 			
 			//Debug.Log("Enabled 0/"+ this.GetType().Name);
 							
@@ -94,7 +94,7 @@ namespace SB {
 		}
 
 		float DamageCalculate(ObjectProperty attacker) {
-			return attacker.attack_power;
+			return attacker.info.attack_power;
 		}
 
 		override public void OnDamage(ObjectProperty attacker) {
@@ -121,7 +121,7 @@ namespace SB {
 		override public void OnDie(ObjectProperty attacker) {
 			Debug.Assert(IsAlive,"die again,this unit is already death");
 			Debug.Log("Die from " + ((null != attacker)?attacker.transform.gameObject.name : ""));
-			
+
 			SetAnimationTrigger("dying");
 			SpawnManager.instance.Remove(this.property);
 		}

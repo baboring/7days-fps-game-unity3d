@@ -172,10 +172,14 @@ namespace SB {
 
 			public readonly eID id;
 			public readonly float sightRange;
-			public readonly float stepAngle;
-			public readonly float eyeLevel;
+			public readonly float attackRange;
 			public readonly float wander_min_range;
 			public readonly float wander_max_range;
+			public readonly float searchRange;
+			public readonly float chaseRange;
+			public readonly float awayRange;
+			public readonly float stepAngle;
+			public readonly float eyeLevel;
 			public readonly float angularSpeed;
 			public readonly float walkSpeed;
 			public readonly float runSpeed;
@@ -196,17 +200,21 @@ namespace SB {
 			public PropertyInfo (List<CSV.varient> tContents) {
 				this.id = tContents[0].ToEnum<PropertyInfo.eID>();
 				this.sightRange = tContents[1];
-				this.stepAngle = tContents[2];
-				this.eyeLevel = tContents[3];
-				this.wander_min_range = tContents[4];
-				this.wander_max_range = tContents[5];
-				this.angularSpeed = tContents[6];
-				this.walkSpeed = tContents[7];
-				this.runSpeed = tContents[8];
-				this.stoppingDist = tContents[9];
-				this.acceleration = tContents[10];
-				this.attack_power = tContents[11];
-				this.life = tContents[12];
+				this.attackRange = tContents[2];
+				this.wander_min_range = tContents[3];
+				this.wander_max_range = tContents[4];
+				this.searchRange = tContents[5];
+				this.chaseRange = tContents[6];
+				this.awayRange = tContents[7];
+				this.stepAngle = tContents[8];
+				this.eyeLevel = tContents[9];
+				this.angularSpeed = tContents[10];
+				this.walkSpeed = tContents[11];
+				this.runSpeed = tContents[12];
+				this.stoppingDist = tContents[13];
+				this.acceleration = tContents[14];
+				this.attack_power = tContents[15];
+				this.life = tContents[16];
 			}
 
 		}

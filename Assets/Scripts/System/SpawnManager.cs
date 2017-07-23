@@ -44,6 +44,9 @@ namespace SB {
 
 		// gradually increse ememies.
 		void OnSpawnCheck() {
+			// Debug Mode
+			if(CheatKey.instance.isDebugMode)
+				return;			
 			if(All.Count < MaxSpawnNum)
 				Spawn(eSpawn.NonPlayer);
 		}
