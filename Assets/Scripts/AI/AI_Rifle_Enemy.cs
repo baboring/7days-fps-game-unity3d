@@ -61,7 +61,7 @@ namespace SB {
 
         // life condotion
         public bool IsRunawayCondition() {
-            return property.life <= property.tb.max_life * 0.2f; 
+            return property.health <= property.tb.max_health * 0.2f; 
         }
 				
 		AIEntity _aiEntity = new AIEntity();
@@ -327,9 +327,8 @@ namespace SB {
 				}
 				// check point 2
 				{
-					float temp_interval_for_attack = 1.0f;
 					// attack processing
-					if(elapsedTime > temp_interval_for_attack) {
+					if(elapsedTime > entity.property.tb.attack_interval) {
 						elapsedTime = 0;
 						// attack
 						entity.Ai.OnAttack(entity.target);

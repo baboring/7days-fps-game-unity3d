@@ -11,12 +11,15 @@ namespace SB {
 
 		[System.NonSerialized]
 		ObjectPool poolInstanceForPrefab;
+		public ObjectPool instance {
+			get { return poolInstanceForPrefab;}
+		}
 
-		public T Instanciate<T> () where T : PooledObject {
+		public T Instanciate<T> (T arg=default(T)) where T : PooledObject {
 			if (!poolInstanceForPrefab) {
 				poolInstanceForPrefab = ObjectPool.CreateObjectPool(this);
 			}
-			return (T)poolInstanceForPrefab.GetObject();
+			return (T)poolInstanceForPrefab.GetObject(arg);
 		}
 
 		public ObjectPool poolHandler { get; set; }

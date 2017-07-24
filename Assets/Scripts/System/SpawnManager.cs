@@ -54,7 +54,7 @@ namespace SB {
 		void Update () {
 
 			// for dev log display
-			DevDisplay.instance.Watch["Spawns"] = All.Count.ToString(); 
+			HUDDevDisplay.instance.Show("Spawns",All.Count.ToString()); 
 		}
 
 		// Spawn unit
@@ -110,6 +110,19 @@ namespace SB {
 			return null;
 		}
 
+        public PooledObject Respawn(PooledObject spawnedObj) { 
+            foreach(var prefab in objPrefabPlayer) {
+                if(prefab.instance == spawnedObj.poolHandler) {
+                    return prefab.Instanciate<PooledObject>(spawnedObj);
+                }
+            }
+            return spawnedObj;
+        }
+
+		public Transform FindRandomSpawnSpot(eSpawn type) {
+			return spots[Random.Range(0, spots.Length)];
+		}
+
         // find spot in spawn spots
         public Transform FindFurthestSpot(ObjectProperty obj) {
             Vector3 longest = Vector3.zero;
@@ -124,6 +137,13 @@ namespace SB {
 
             return pick;
         }
+
+		public void KillAll() {
+			foreach(var obj in All.ToArray()) {
+				if(null != obj.owner)
+					obj.owner.OnDie(null);
+			}
+		}
 		
 	}
 }

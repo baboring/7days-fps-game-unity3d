@@ -20,7 +20,7 @@ public class Startup : MonoBehaviour {
             Facade_Coroutine.Wait(() => {return !SpawnManager.instance;}),
             Facade_Coroutine.Wait(() => {return !GameManager.instance;}),
 			Facade_Coroutine.Do(()=>{
-				GameManager.instance.StartGame();
+				GameManager.instance.ReadyToPlay();
 			})
 		);
 		

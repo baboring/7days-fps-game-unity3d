@@ -187,7 +187,8 @@ namespace SB {
 			public readonly float stoppingDist;
 			public readonly float acceleration;
 			public readonly float attack_power;
-			public readonly float max_life;
+			public readonly float attack_interval;
+			public readonly float max_health;
 
 			public enum eID : int {
 				None,
@@ -216,7 +217,8 @@ namespace SB {
 				this.stoppingDist = tContents[14];
 				this.acceleration = tContents[15];
 				this.attack_power = tContents[16];
-				this.max_life = tContents[17];
+				this.attack_interval = tContents[17];
+				this.max_health = tContents[18];
 			}
 
 		}

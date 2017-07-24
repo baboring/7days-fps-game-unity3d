@@ -70,12 +70,7 @@ public class MouseLookSmooth : MonoBehaviour {
 	}
 
 	private void InternalLockUpdate() {
-		if(Input.GetKeyUp(KeyCode.Escape)) {
-			m_cursorIsLocked = false;
-		}
-		else if(Input.GetMouseButtonUp(0)||Input.GetMouseButtonUp(1)) {
-			m_cursorIsLocked = true;
-		}
+		m_cursorIsLocked = !GameData.instance.IsPause;
 
 		if (m_cursorIsLocked) {
 			Cursor.lockState = CursorLockMode.Locked;

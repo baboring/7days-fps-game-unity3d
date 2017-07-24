@@ -43,7 +43,15 @@ namespace SB {
 			//Debug.Log("Enabled 0/"+ this.GetType().Name);
 							
 		}
-		protected bool IsMoving {
+        void OnGUI() {
+            Camera cam = (Camera.main) ? Camera.main : Camera.current;
+            if(cam) {
+                string outPut = string.Format("{0:0} %", property.health * 100 / property.tb.max_health);
+                Vector2 targetPos = cam.WorldToScreenPoint(property.Position + new Vector3(0, 1.0f, 0));
+                GUI.Box(new Rect(targetPos.x-30, Screen.height - targetPos.y, 60, 20), outPut);
+            }
+        }
+        protected bool IsMoving {
 			get { return agent && (agent.desiredVelocity.magnitude > 0);}
 		}
 		
@@ -51,10 +59,9 @@ namespace SB {
 			if(agent)
 				SetAnimationFloat("forward",agent.velocity.magnitude);
 			// basic hp regeneration
-			if(property.isAlive && property.life < property.tb.max_life)
-				property.life += Time.fixedDeltaTime * 0.1f;
+			if(property.isAlive && property.health < property.tb.max_health)
+				property.health += Time.fixedDeltaTime * 0.1f;
 		}
-
 
 		void OnTriggerEnter(Collider col){
 			Debug.Log("hit+:" + gameObject.name);
@@ -101,32 +108,32 @@ namespace SB {
 			}
 		}
 
-		override public void OnDamage(ObjectProperty attacker) {
+		override public void OnDamage(ObjectProperty skill) {
 
 			if(!IsAlive)
 				return;
 
-			Debug.Assert(null != attacker,"Attacker is null");
+			Debug.Assert(null != skill,"skill is null");
 
 			// motion adjust
 			if(!agent.isStopped)
 				agent.velocity = (agent.velocity.magnitude / 2f) * agent.velocity.normalized;
 
 			// demage calculate
-			float impactDamage = DamageCalculate(attacker);
-			property.life -= impactDamage;
+			float impactDamage = DamageCalculate(skill);
+			property.health -= impactDamage;
 			// call die 
-			if(property.life <= 0) {
-				OnDie(attacker);
-			}
+			if(property.health <= 0)
+				OnDie(skill);
 			else 
 				SetAnimationTrigger("damaged");
 		}
 
-		override public void OnDie(ObjectProperty attacker) {
+		override public void OnDie(ObjectProperty skill) {
 			Debug.Assert(IsAlive,"die again,this unit is already death");
-			Debug.Log("Die from " + ((null != attacker)?attacker.transform.gameObject.name : ""));
+			Debug.Log("Die from " + ((null != skill) ? skill.transform.gameObject.name : ""));
 
+            property.health = 0;
 			property.isAlive = false;
 			SetAnimationTrigger("dying");
 			SpawnManager.instance.Remove(this.property);

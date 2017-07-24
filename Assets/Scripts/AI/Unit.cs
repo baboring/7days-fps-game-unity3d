@@ -14,7 +14,7 @@ namespace SB {
 	[RequireComponent(typeof(ObjectProperty))]
 	public abstract class Unit : MonoBehaviour {
 
-		[System.NonSerialized]
+        [System.NonSerialized]
 		public ObjectProperty property;
 		// Use this for initialization
 
@@ -30,8 +30,8 @@ namespace SB {
 		public bool IsAlive { get {return property.isAlive;} }
 
 		abstract public void OnAttack(ObjectProperty obj);
-		abstract public void OnDamage(ObjectProperty obj);
-		abstract public void OnDie(ObjectProperty obj);
+		abstract public void OnDamage(ObjectProperty skill);
+		abstract public void OnDie(ObjectProperty skill);
 
 		public void DisposeForPool() {
 
@@ -40,5 +40,15 @@ namespace SB {
 			
 			property.ReturnToPool();
 		}
-	}
+
+        [System.NonSerialized]
+        public Transform eyesTransform;     // for eye level
+        public void ConnectToEyes(Transform cam)
+        {
+            if (cam)
+                eyesTransform = cam;
+        }
+
+
+    }
 }

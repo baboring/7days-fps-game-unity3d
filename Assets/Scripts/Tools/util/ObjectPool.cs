@@ -34,9 +34,19 @@ namespace SB {
 			return pool;
 		}
 
-		public PooledObject GetObject () {
+		public PooledObject GetObject (PooledObject arg) {
 			PooledObject obj;
-			int lastAvailableIndex = availableObjects.Count - 1;
+            if(arg != default(PooledObject)) {
+                int index = FindIndex(arg);
+                if (index > -1 && availableObjects.Count > 0) {
+                    obj = availableObjects[index];
+                    availableObjects.RemoveAt(index);
+                    obj.gameObject.SetActive(true);
+                    return obj;
+                }
+            }
+            
+            int lastAvailableIndex = availableObjects.Count - 1;
 			if (lastAvailableIndex >= 0) {
 				obj = availableObjects[lastAvailableIndex];
 				availableObjects.RemoveAt(lastAvailableIndex);
@@ -50,7 +60,11 @@ namespace SB {
 			return obj;
 		}
 
-		public void AddObject (PooledObject obj) {
+        public int FindIndex(PooledObject obj) {
+            return availableObjects.FindIndex((val) => { return val == obj; });
+        }
+
+        public void AddObject (PooledObject obj) {
 			obj.gameObject.SetActive(false);
 			availableObjects.Add(obj);
 		}

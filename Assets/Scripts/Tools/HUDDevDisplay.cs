@@ -1,6 +1,6 @@
 ﻿/* *************************************************
 *  Created:  7/22/2017, 10:09:28 PM
-*  File:     DevDisplay.cs
+*  File:     HUDDevDisplay.cs
 *  Author:   Benjamin
 *  Purpose:  []
 ****************************************************/
@@ -10,16 +10,22 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SB {
-	public class DevDisplay : ManualSingletonMB<DevDisplay> {
+	public class HUDDevDisplay : ManualSingletonMB<HUDDevDisplay> {
 
 		public Text TextOut;
 
-		public Dictionary<string,string> Watch = new Dictionary<string,string>();
+		Dictionary<string,string> Watch = new Dictionary<string,string>();
 
 		// Use this for initialization
 		void Start () {
 			instance = this;
 		}
+
+		// UI debug
+		public void Show(string key, string format, params object[] args) {
+			Watch[key] = string.Format(format,args);
+		}
+
 		private StringBuilder sb;
 		
 		// Update is called once per frame

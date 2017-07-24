@@ -21,7 +21,7 @@ namespace SB {
 			
 		}
 		
-		public void AttachTo(PlayerController player, Vector3 offset = default(Vector3)) {
+		public void AttachTo(Unit player, Vector3 offset = default(Vector3)) {
 
 			Debug.Assert(null != player,"player controller is null");
 			if(!player)
@@ -38,7 +38,8 @@ namespace SB {
 			Camera playerCam = GetComponent<Camera>();
 			if(playerCam) {
 				Debug.Log("switch camera");
-				Camera.main.enabled = false;
+                if(Camera.main)
+    				Camera.main.enabled = false;
 				playerCam.enabled = true;
 			}
 			

@@ -38,7 +38,7 @@ namespace SB {
 		public R.PropertyInfo tb { get; private set;}
 
 		// dynmic data
-		public float life = 10;
+		public float health;
 
 		[System.NonSerialized]
 		public bool isAlive = true;
@@ -60,7 +60,7 @@ namespace SB {
 
             vEyeLevel = new Vector3(0, tb.eyeLevel, 0);
             // variable reset
-            life = tb.max_life;
+            health = tb.max_health;
 			isAlive = true;
 			
 			return true;

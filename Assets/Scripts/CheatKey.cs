@@ -35,17 +35,14 @@ public class CheatKey : ManualSingletonMB<CheatKey> {
 		if(Input.GetKeyDown(KeyCode.Alpha1)) {
 
 			// Vector3 lookDir = PlayerController.instance.transform.TransformDirection(Vector3.forward);
-			Vector3 lookDir = PlayerController.instance.eyesTransform.forward;
+			Vector3 lookDir = PlayerController.instance.player.eyesTransform.forward;
 			float range = PlayerController.instance.property.tb.sightRange;
 			SpawnManager.instance.Spawn(eSpawn.NonPlayer,PlayerController.instance.transform.position + lookDir * range);
 		} 
 		
 		// all die
 		if(Input.GetKeyDown(KeyCode.Minus)) {
-			foreach(var obj in SpawnManager.instance.All.ToArray()) {
-				if(null != obj.owner)
-					obj.owner.OnDie(null);
-			}
+			SpawnManager.instance.KillAll();
 		}
 	}
 }

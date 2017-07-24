@@ -6,16 +6,14 @@ using UnityEngine;
 namespace SB {
 
 	[RequireComponent(typeof(CharacterController),typeof(ObjectProperty))]
+	[RequireComponent(typeof(AI_Player))]
 	[RequireComponent(typeof(Animator))]
-	public class PlayerController : PooledObject {
+	public class PlayerController : ManualSingletonMB<PlayerController> {
 
-		public static PlayerController instance;
-		public Bullet bullet;
-		public Weapon weapon;
 		// Use this for initialization
-		public Transform eyesTransform;
-		public float jumpSpeed = 5.0f;
-		public float gravity = 10;
+		public AI_Player player;
+		public float jumpSpeed = 60;
+		public float gravity = 180;
 
 		public ObjectProperty property;
 
@@ -23,24 +21,27 @@ namespace SB {
 		CharacterController controller;
 		Vector3 moveDirection;
 
-		void Awake() {
-			instance = this;
-		}
-
 		void Start () {
+            instance = this;
+            player = GetComponent<AI_Player>();
 			property = GetComponent<ObjectProperty>();
 			animator = GetComponent<Animator>();
 			controller = GetComponent<CharacterController>();
 			property.Reset();
 		}
 
-		public void ConnectToEyes(Transform cam) {
-			if(cam) {
-				eyesTransform = cam;
-			}
-		}
-		
-		void InputMovementTest() {
+        public void Respawn(Transform spot) {
+            transform.position = spot.position;
+            transform.rotation = spot.rotation;
+            if (!transform.gameObject.activeSelf) {
+                var spawn = SpawnManager.instance.Respawn(property);
+                Debug.Assert(spawn == property,"respawn failed!!");
+            }
+            property.Reset();
+        }
+
+
+        void InputMovementTest() {
 			var x = Input.GetAxis("Horizontal") * Time.deltaTime * 150.0f;
 			var z = Input.GetAxis("Vertical") * Time.deltaTime * 3.0f;
 
@@ -53,10 +54,10 @@ namespace SB {
 		void InputMovement(bool IsSprnit) {
 
 			// look cam view
-			if(eyesTransform) {
-				moveDirection = eyesTransform.forward * Input.GetAxis("Vertical");
-	//			moveDirection +=  Vector3.Cross(eyesTransform.up, eyesTransform.forward).normalized * Input.GetAxis("Horizontal");
-				moveDirection +=  eyesTransform.right * Input.GetAxis("Horizontal");
+			if(player.eyesTransform) {
+				moveDirection = player.eyesTransform.forward * Input.GetAxis("Vertical");
+	//			moveDirection +=  Vector3.Cross(player.eyesTransform.up, player.eyesTransform.forward).normalized * Input.GetAxis("Horizontal");
+				moveDirection +=  player.eyesTransform.right * Input.GetAxis("Horizontal");
 				animator.SetFloat("horz",Input.GetAxis("Horizontal") * ((IsSprnit)? property.tb.runSpeed : property.tb.walkSpeed));
 				animator.SetFloat("vert",Input.GetAxis("Vertical") * ((IsSprnit)? property.tb.runSpeed : property.tb.walkSpeed));
 			}
@@ -74,10 +75,11 @@ namespace SB {
 			}
 		}
 
-		void Shoot()
+
+        void Shoot()
 		{
-			Debug.Assert(null != weapon,"weapon is null!!");
-			if(weapon.Shoot(bullet, property, eyesTransform)) {
+			Debug.Assert(null != player.weapon,"weapon is null!!");
+			if(player.weapon.Shoot(player.bullet, property, player.eyesTransform)) {
 				//Debug.Log("Shoot!!");
 			}
 		}		

@@ -39,15 +39,19 @@ public static class Facade_Coroutine  {
          yield return new WaitForSeconds(time);
      }
  
-      public static void Do(MonoBehaviour go, Action action) {
+     public static void Do(MonoBehaviour go, Action action) {
 		 go.StartCoroutine(Do(action));
-     }	 
-	 public static IEnumerator Do(Action action) {
+     }
+    public static void Run(MonoBehaviour go, IEnumerator routine)
+    {
+        go.StartCoroutine(routine);
+    }
+    public static IEnumerator Do(Action action) {
          action();
          yield return 0;
      }
 
-    public static void Wait(MonoBehaviour go, System.Func<bool> condition) {
+    public static void While(MonoBehaviour go, System.Func<bool> condition) {
 		 go.StartCoroutine(Wait(condition));
      }	 
     public static IEnumerator Wait(System.Func<bool> condition) {
