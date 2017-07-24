@@ -32,16 +32,29 @@ namespace SB {
 			if(IsAlive && _aiEntity.Ai) {
 				_aiEntity.UpdateState();
 
-				if(_aiEntity.destination != Vector3.zero)
-					Debug.DrawRay(_aiEntity.property.transform.position, _aiEntity.destination - _aiEntity.property.transform.position, Color.green);
-				if(_aiEntity.target)
-                    Debug.DrawRay(_aiEntity.property.Position, _aiEntity.property.DistanceFrom(_aiEntity.target), Color.red);
+				if(CheatKey.instance.isDebugMode) {
+					if(_aiEntity.destination != Vector3.zero)
+						Debug.DrawRay(_aiEntity.property.transform.position, _aiEntity.destination - _aiEntity.property.transform.position, Color.green);
+					if(_aiEntity.target)
+						Debug.DrawRay(_aiEntity.property.Position, _aiEntity.property.DistanceFrom(_aiEntity.target), Color.red);
+				}
+            }
+        }
 
+        void OnGUI() {
+            Camera cam = (Camera.main) ? Camera.main : Camera.current;
+            if(cam) {
+                //string outPut = string.Format("{0:0} %", property.health * 100 / property.tb.max_health);
+                string outPut = string.Format("{0}", _aiEntity.Event);
+                Vector2 targetPos = cam.WorldToScreenPoint(property.Position + new Vector3(0, 1.0f, 0));
+                GUI.Box(new Rect(targetPos.x-30, Screen.height - targetPos.y, 60, 20), outPut);
             }
         }
 
 		override public void OnDamage(ObjectProperty skill) {
-			base.OnDamage(skill);
+
+			if(!IsAlive)
+				return;
 
 			_aiEntity.triggerDamage = skill;
 			switch((eEntityState)_aiEntity.Event) {
@@ -52,7 +65,17 @@ namespace SB {
 					agent.ResetPath();
 					break;
 			}
-		}		
+
+			// for dying procesing
+			base.OnDamage(skill);
+		}
+		override public void OnDie(ObjectProperty skill) {
+			agent.ResetPath();
+			_aiEntity.Event = null;
+			agent.isStopped = true;
+
+			base.OnDie(skill);
+		}				
 		override protected void OnAnimationTrigger(string arg) {
 			base.OnAnimationTrigger(arg);
 
@@ -110,6 +133,8 @@ namespace SB {
 							Ai.agent.isStopped = false;
 						break;
 					case "enterDie":
+						// die sound
+						SoundManager.instance.Play(eSoundId.Hit, property.transform);
 						Ai.agent.isStopped = true;
 						break;
 					case "leaveDie":

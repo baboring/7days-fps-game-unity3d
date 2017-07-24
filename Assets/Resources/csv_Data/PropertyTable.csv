@@ -2,10 +2,10 @@ PropertyInfo,19,5
 id,sightRange,attackRange,wander_min_range,wander_max_range,searchRange,chaseRange,awayRange,stepAngle,eyeLevel,angularSpeed,walkSpeed,runSpeed,sprintSpeed,stoppingDist,acceleration,attack_power,attack_interval,max_health
 !enum:eID,!float,!float,!float,!float,!float,!float,!float,!float,!float,!float,!float,!float,!float,!float,!float,!float,!float,!float
 None,,,,,,,,,,,,,,,,,,
-Bullet,,,,,,,,,,,,,,,100,5,,1
-Hunter,15,12,15,30,20,20,30,5,1.5,1200,1.4,2.1,5.1,1.2,8,5,0.3,50
-Bot_X,12,12,15,30,20,20,30,5,1.5,1200,1.2,2,4,1.2,8,5,0.3,50
-Player,12,12,3,4,20,20,30,5,1.5,1200,2,3.5,3.5,1.2,8,5,0.3,100
+Bullet,,,,,,,,,,,,,,,100,1,,1
+Hunter,15,12,15,30,20,20,30,5,1.5,1200,1.4,2.1,5.1,1.2,8,1,0.4,50
+Bot_X,12,12,15,30,20,20,30,5,1.5,1200,1.2,2,4,1.2,8,1,0.4,50
+Player,12,12,3,4,20,20,30,5,1.5,1200,2,3.5,3.5,1.2,8,5,0.4,1000
 Speeches,6,10
 id,StrValue,Search,StrHelp,StrMotion,json
 !enum:eKey,!string,!string,!string,!string,!string

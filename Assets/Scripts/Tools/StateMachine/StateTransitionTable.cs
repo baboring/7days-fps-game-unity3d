@@ -47,7 +47,8 @@ namespace SB
 
 		public object Event {
 			set {
-				Debug.Log("FSM Event:"+value.ToString());
+				if(null != value)
+					Debug.Log("FSM Event:"+value.ToString());
 				currentEvent = value;
 				if (value == null) {
 					currentState.Exit(this);

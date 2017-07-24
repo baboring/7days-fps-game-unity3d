@@ -41,7 +41,8 @@ namespace SB {
 			}
 			
 			if(clone.OnFire(owner,lookDir,force)) {
-				if(effectSoundFire)
+				// only player
+				if(effectSoundFire && owner.ally != AliasType.NonPlayer)
 					effectSoundFire.Play();
 			}
 

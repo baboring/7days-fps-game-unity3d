@@ -19,7 +19,7 @@ namespace SB {
 
     public static class Facade_AI  {
 
-        static bool debug_on = true;
+        static bool debug_on = false;
 
         // detecting target
         static public bool DetectTarget(ObjectProperty property,float range, out ObjectProperty target ) {

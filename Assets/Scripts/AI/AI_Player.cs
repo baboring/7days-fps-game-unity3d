@@ -36,12 +36,17 @@ public class AI_Player : Unit {
 	}
 
 	override public void OnDie(ObjectProperty attacker) {
+        Debug.Log("Die");
 		GameManager.instance.GameOver();
         this.DisposeForPool();
     }
 
     void SetAnimationTrigger(string arg)
     {
+        if(arg == "damaged") {
+            SoundManager.instance.Play(eSoundId.Hit2, transform.position);
+            HUD.instance.Event(eNotifyHUD.Damage,arg);
+        }
         Debug.Assert(null != animator, "animator is null " + this.GetType().Name);
         if (animator)
             animator.SetTrigger(arg);

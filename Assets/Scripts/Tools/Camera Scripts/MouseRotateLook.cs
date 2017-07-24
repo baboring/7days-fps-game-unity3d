@@ -1,8 +1,14 @@
-﻿using System.Collections;
+﻿/* *************************************************
+*  Created:  7/24/2017, 12:11:26 AM
+*  File:     MouseRotateLook.cs
+*  Author:   Benjamin
+*  Purpose:  []
+****************************************************/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MouseLookSmooth : MonoBehaviour {
+public class MouseRotateLook : MonoBehaviour {
 
 	// Use this for initialization
 	void Start ()
@@ -24,9 +30,9 @@ public class MouseLookSmooth : MonoBehaviour {
 	float rotationX = 0f;
 	float rotationY = 0f;
 
-	void Update ()
+	void FixedUpdate ()
 	{
-		if(m_cursorIsLocked) {
+		if(turnOn) {
 			switch(axes) {
 				case RotationAxes.MouseXAndY:
 					rotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * sensitivityX;
@@ -46,41 +52,27 @@ public class MouseLookSmooth : MonoBehaviour {
 					break;
 			}
 		}
-		UpdateCursorLock();
-		
+
 	}
 
 
-	public bool lockCursor = true;
-	bool m_cursorIsLocked = false;
+	public bool lockCursor = false;
+	public bool turnOn = true;
 	public void SetCursorLock(bool value)
 	{
+		turnOn = value;
 		lockCursor = value;
-		if(!lockCursor) {//we force unlock the cursor if the user disable the cursor locking helper
-			Cursor.lockState = CursorLockMode.None;
-			Cursor.visible = true;
-		}
-	}	
-
-	public void UpdateCursorLock()
-	{
-		//if the user set "lockCursor" we check & properly lock the cursos
-		if (lockCursor)
-			InternalLockUpdate();
-	}
-
-	private void InternalLockUpdate() {
-		m_cursorIsLocked = !GameData.instance.IsPause;
-
-		if (m_cursorIsLocked) {
+		if (lockCursor) {
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
 		}
-		else if (!m_cursorIsLocked) {
+		else if (!lockCursor) {
 			Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
-		}
-	}
+		}		
+	}	
+
+
 	
 
 }

@@ -53,7 +53,7 @@ namespace SB {
 		}
 
 		public bool Reset() {
-			//Debug.Log("Property Reset - " + tableId);
+			Debug.Log("Property Reset - " + tableId);
 			var tb = R.GetPropertyInfo(tableId);
 			Debug.Assert(null != tb,"Not exist table id : "+tableId);
 			this.tb = tb;

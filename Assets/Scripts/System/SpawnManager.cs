@@ -38,14 +38,11 @@ namespace SB {
 			InvokeRepeating("OnSpawnCheck", 2.0f, SecondsForSpawn);
 		}
 
-		public void Remove(ObjectProperty obj) {
-			All.Remove(obj);
-		}
 
 		// gradually increse ememies.
 		void OnSpawnCheck() {
 			// Debug Mode
-			if(CheatKey.instance.isDebugMode)
+			if(CheatKey.instance.isDebugMode || GameData.instance.IsPause)
 				return;			
 			if(All.Count < MaxSpawnNum)
 				Spawn(eSpawn.NonPlayer);
@@ -55,6 +52,10 @@ namespace SB {
 
 			// for dev log display
 			HUDDevDisplay.instance.Show("Spawns",All.Count.ToString()); 
+		}
+
+		public void Remove(ObjectProperty obj) {
+			All.Remove(obj);
 		}
 
 		// Spawn unit

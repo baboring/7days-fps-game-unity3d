@@ -13,15 +13,12 @@ namespace SB {
 		bool isHit = false;
 
 		ObjectProperty owner;
-		void Awake() {
-
+		void OnEnable() {
+			isHit = false;
+			owner = null;
 		}
 		
 		// Update is called once per frame
-		void Update () {
-			
-		}
-
 		void FixedUpdate()
 		{
 			if(isHit)

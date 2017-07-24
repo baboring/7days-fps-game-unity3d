@@ -29,6 +29,7 @@ namespace SB {
 			Debug.Log("GameManager initialized");
 		}
 
+		// first time loaded
 		public void ReadyToPlay() {
             isShowMenu = true;
             Debug.Log("Loading Start");
@@ -38,7 +39,6 @@ namespace SB {
                 if (color.a > 0) {
                     color.a -= ((Time.deltaTime > 0)? Time.deltaTime: 0.03f);
                     imgLoading.color = color;
-					//Debug.Log(color.a.ToString("0.0"));
                     return true;
                 }
                 Debug.Log("Loading Done");
@@ -47,36 +47,6 @@ namespace SB {
             });
             //imgLoading.color = new Color(0, 0, 0, 0);
  		}
-
-		 bool isInitialized {
-			 get { return PlayerController.instance != null;}
-		 }
-
-		public void StartGame() {
-			isShowMenu = false;
-			// all clear
-			SpawnManager.instance.KillAll();
- 			
-			// Spawn Player
-			Debug.Log("----- StartGame --------");
-			GameObject[] playerCameras = GameObject.FindGameObjectsWithTag("Player Camera");
-			if(PlayerController.instance) {
-				var spot = SpawnManager.instance.FindRandomSpawnSpot(eSpawn.Player);
-				PlayerController.instance.Respawn(spot);
-            }
-            else {
-                var player = SpawnManager.instance.Spawn(eSpawn.Player) as ObjectProperty;
-                player.transform.gameObject.AddComponent<PlayerController>();
-                Debug.Assert(null != player, "Random Spawn fails : player is null");
-                foreach (var go in playerCameras) {
-                    if (go.GetComponent<PlayerCamera>()) {
-                        go.GetComponent<PlayerCamera>().AttachTo(player.owner);
-                    }
-                }
-            }
-
-       }
-
 		public bool isShowMenu {
 			get{
 				return HUD_MainMenu.activeSelf;
@@ -86,11 +56,25 @@ namespace SB {
 				GameData.instance.IsPause = value;
 			}
 		}
+		 bool isInitialized {
+			 get { return PlayerController.instance != null;}
+		 }
+
+		// Game Start
+		public void StartGame() {
+			// all clear
+			GameData.instance.Reset();
+			isShowMenu = false;
+       }
+
 
 		public void PauseGame() {
 			isShowMenu = true;
 		}
+
 		public void ResumeGame() {
+			if(GameData.instance.IsGameOver)
+				return;
 			if(!isInitialized) {
 				StartGame();
 				return;
@@ -98,15 +82,32 @@ namespace SB {
 			isShowMenu = false;
 		}
 
+
 		public void GameOver() {
+			Debug.Log("GameOver");
+			GameData.instance.IsGameOver = true;
+			GameData.instance.IsShowGameOver = true;
 			PauseGame();
 		}
 		
+		public void ReturnToMenu() {
+			GameData.instance.IsShowGameOver = false;
+			isShowMenu = true;
+		}
 		// Update is called once per frame
 		void Update () {
 			if(Input.GetKeyDown(KeyCode.Escape)) {
+
+				if(GameData.instance.IsShowGameOver) {
+					GameData.instance.IsShowGameOver = false;
+					return;
+				}
 				isShowMenu = !isShowMenu;
 			}
+
+			// if(GameData.instance.IsGameOver){
+
+			// }
 			
 		}
 	}

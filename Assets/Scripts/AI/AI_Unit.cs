@@ -43,14 +43,6 @@ namespace SB {
 			//Debug.Log("Enabled 0/"+ this.GetType().Name);
 							
 		}
-        void OnGUI() {
-            Camera cam = (Camera.main) ? Camera.main : Camera.current;
-            if(cam) {
-                string outPut = string.Format("{0:0} %", property.health * 100 / property.tb.max_health);
-                Vector2 targetPos = cam.WorldToScreenPoint(property.Position + new Vector3(0, 1.0f, 0));
-                GUI.Box(new Rect(targetPos.x-30, Screen.height - targetPos.y, 60, 20), outPut);
-            }
-        }
         protected bool IsMoving {
 			get { return agent && (agent.desiredVelocity.magnitude > 0);}
 		}
@@ -136,7 +128,15 @@ namespace SB {
             property.health = 0;
 			property.isAlive = false;
 			SetAnimationTrigger("dying");
+
+            // add score
+            if (skill && skill.owner && skill.owner.property.ally != this.property.ally) {
+                GameData.instance.Score += 100;
+				HUD.instance.Event(eNotifyHUD.Kill,100);
+			}
+
 			SpawnManager.instance.Remove(this.property);
+			
 		}
 
 		
