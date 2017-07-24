@@ -281,6 +281,15 @@ namespace SB {
 							entity.Event = eEntityState.Attack;
 							return;
 						}
+						// blocked sight
+                        if (result == RaycastResult.BlockedTarget) {
+							Vector3 distance = entity.property.DistanceFrom(entity.target);
+							if(distance.magnitude < entity.property.tb.chaseRange) {
+								entity.Ai.agent.destination = entity.target.transform.position;
+								entity.Ai.agent.isStopped = false;
+								return;
+							}
+						}
 					}
 					else {
 						ObjectProperty target;					
@@ -296,7 +305,7 @@ namespace SB {
 				//check point 2
 				{
 					// follow target if it is in chaseRange 
-					if(entity.target) {
+					if(entity.target && entity.target.isAlive) {
 						Vector3 distance = entity.property.DistanceFrom(entity.target);
 						if(distance.magnitude < entity.property.tb.chaseRange) {
 							entity.Ai.agent.destination = entity.target.transform.position;
