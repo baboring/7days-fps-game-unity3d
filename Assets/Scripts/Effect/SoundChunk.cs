@@ -36,8 +36,9 @@ namespace SB {
 			Debug.Assert(null != snd,"AudioSource is null in Sound script");
 			if(snd) {
                 Debug.Assert(null != snd.clip, "Audio Clip is Empty!!!");
-                wait = snd.clip.length; //set wait to be clip's length
                 snd.Play();
+                wait = snd.clip.length; //set wait to be clip's length
+				check = true;
 			}
 		}
 		public void Play(Transform target) {
