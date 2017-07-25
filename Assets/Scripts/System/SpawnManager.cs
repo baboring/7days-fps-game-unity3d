@@ -20,7 +20,7 @@ namespace SB {
 	public class SpawnManager : ManualSingletonMB<SpawnManager> {
 
 		public int MaxSpawnNum = 30;
-		public int SecondsForSpawn = 5;
+		public float SecondsForSpawn = 2;
 
 		public Transform[] spots;
 		public PooledObject[] objPrefabNPC;
@@ -35,12 +35,13 @@ namespace SB {
 		void Start() {
 			Debug.Log("SpawnManager initialized");
 			// gradually increse ememies.
-			InvokeRepeating("OnSpawnCheck", 2.0f, SecondsForSpawn);
+			// InvokeRepeating("OnSpawnCheck", 1.0f, SecondsForSpawn);
 		}
 
 
 		// gradually increse ememies.
 		void OnSpawnCheck() {
+			Debug.Log("OnSpawnCheck:" + All.Count);
 			// Debug Mode
 			if(CheatKey.instance.isDebugMode || GameData.instance.IsPause)
 				return;			
@@ -48,8 +49,13 @@ namespace SB {
 				Spawn(eSpawn.NonPlayer);
 		}
 		// Update is called once per frame
+		float elpasedTime = 0;
 		void Update () {
-
+			if(elpasedTime > SecondsForSpawn) {
+				elpasedTime = 0;
+				OnSpawnCheck();
+			}
+			elpasedTime += Time.deltaTime;
 			// for dev log display
 			HUDDevDisplay.instance.Show("Spawns",All.Count.ToString()); 
 		}

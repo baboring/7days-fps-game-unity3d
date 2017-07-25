@@ -35,12 +35,7 @@ public class GameData : ManualSingletonMB<GameData> {
         IsPause = false;
         Timer = totalTime;
 
-        /// initial spawn
-        if (!CheatKey.instance.isDebugMode) {
-			for(int i=0;i<5;++i)
-				SpawnManager.instance.Spawn(eSpawn.NonPlayer);
-		}
-		
+	
 		// Spawn Player
 		Debug.Log("----- StartGame --------");
 		GameObject[] playerCameras = GameObject.FindGameObjectsWithTag("Player Camera");
