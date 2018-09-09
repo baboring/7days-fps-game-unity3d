@@ -1,6 +1,6 @@
 ﻿/********************************************************************
 	created:	2014/12/11
-	filename:	ButtonHandler.cs
+	filename:	FiniteStateMachine.cs
 	author:		Benjamin
 	purpose:	[FSM]
 *********************************************************************/
